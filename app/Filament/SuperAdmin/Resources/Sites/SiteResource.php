@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Filament\SuperAdmin\Resources\Sites;
+
+use App\Filament\SuperAdmin\Resources\Sites\Pages\CreateSite;
+use App\Filament\SuperAdmin\Resources\Sites\Pages\EditSite;
+use App\Filament\SuperAdmin\Resources\Sites\Pages\ListSites;
+use App\Filament\SuperAdmin\Resources\Sites\Schemas\SiteForm;
+use App\Filament\SuperAdmin\Resources\Sites\Tables\SitesTable;
+use App\Models\Site;
+use BackedEnum;
+use Filament\Resources\ParentResourceRegistration;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
+
+class SiteResource extends Resource
+{
+    protected static ?string $model = Site::class;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    public static function form(Schema $schema): Schema
+    {
+        return SiteForm::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return SitesTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+//    public static function getParentResourceRegistration(): ?ParentResourceRegistration
+//    {
+//        return SiteResource::asParent()
+//            ->relationship('tags')
+//            ->inverseRelationship('sites');
+//    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListSites::route('/'),
+            'create' => CreateSite::route('/create'),
+            'edit' => EditSite::route('/{record}/edit'),
+        ];
+    }
+}
