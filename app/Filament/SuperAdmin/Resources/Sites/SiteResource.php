@@ -38,18 +38,11 @@ class SiteResource extends Resource
         ];
     }
 
-//    public static function getParentResourceRegistration(): ?ParentResourceRegistration
-//    {
-//        return SiteResource::asParent()
-//            ->relationship('tags')
-//            ->inverseRelationship('sites');
-//    }
-
     public static function getPages(): array
     {
         return [
             'index' => ListSites::route('/'),
-            'create' => CreateSite::route('/create'),
+//            'create' => CreateSite::route('/create'),
             'edit' => EditSite::route('/{record}/edit'),
         ];
     }

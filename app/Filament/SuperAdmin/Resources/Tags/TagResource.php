@@ -41,8 +41,8 @@ class TagResource extends Resource
     {
         return [
             'index' => ListTags::route('/'),
-            'create' => CreateTag::route('/create'),
-            'edit' => EditTag::route('/{record}/edit'),
+//            'create' => CreateTag::route('/create'),
+//            'edit' => EditTag::route('/{record}/edit'),
         ];
     }
 }

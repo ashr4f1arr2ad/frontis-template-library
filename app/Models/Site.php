@@ -14,9 +14,4 @@ class Site extends Model
     {
         return $this->belongsToMany(Tag::class, 'site_tag');
     }
-
-    public function dependencies(): HasMany
-    {
-        return $this->hasMany(Dependency::class);
-    }
 }
