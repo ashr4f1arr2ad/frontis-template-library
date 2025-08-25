@@ -45,4 +45,9 @@ class TagResource extends Resource
             'edit' => EditTag::route('/{record}/edit'),
         ];
     }
+
+    // public static function getNavigationGroup(): ?string
+    // {
+    //     return 'Sites Management';
+    // }
 }
