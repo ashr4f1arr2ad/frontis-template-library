@@ -49,6 +49,11 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    public function subscriptions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Subscription::class, 'subscription_user', 'user_id', 'subscription_id');
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'super-admin') {
