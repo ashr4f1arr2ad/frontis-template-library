@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Filament\Forms\Form;
 
 class SiteResource extends Resource
 {
@@ -46,4 +47,9 @@ class SiteResource extends Resource
             'edit' => EditSite::route('/{record}/edit'),
         ];
     }
+
+    // public static function getNavigationGroup(): ?string
+    // {
+    //     return 'Sites Management';
+    // }
 }

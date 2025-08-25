@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Site extends Model
 {
-    protected $fillable = ['name']; // Adjust based on your Site model
+    protected $fillable = ['title', 'slug', 'description', 'content', 'is_premium', 'image', 'dependencies', 'tags'];
+
+    protected $casts = [
+        'dependencies' => 'array',
+        'tags' => 'array',
+    ];
 
     public function tags(): BelongsToMany
     {
