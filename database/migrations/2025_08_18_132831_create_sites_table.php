@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
-            $table->text('description');
             $table->string('content');
+            $table->json('tags');
+            $table->text('description');
+            $table->string('image')->nullable();
+            $table->json('dependencies');
             $table->boolean('is_premium')->default(false);
-
             $table->timestamps();
         });
     }
