@@ -2,6 +2,7 @@
 
 namespace App\Filament\SuperAdmin\Resources\Sites\Schemas;
 
+use App\Models\Category;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -34,12 +35,21 @@ class SiteForm
                     ->label('Content')
                     ->rows(8)->columnSpanFull(),
                     TagsInput::make('tags')
-                    ->suggestions([
-                        'tailwindcss',
-                        'alpinejs',
-                        'laravel',
-                        'livewire',
-                    ])->columnSpanFull(),
+                        ->suggestions([
+                            'tailwindcss',
+                            'alpinejs',
+                            'laravel',
+                            'livewire',
+                        ])->columnSpanFull(),
+                Select::make('categories')
+                    ->multiple()
+                    ->relationship('categories', 'name')
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                            ->unique(table: Category::class),
+                    ])->columns(3)->columnSpanFull(),
                     MarkdownEditor::make('description')->columnSpanFull(),
                     FileUpload::make('image')
                     ->required()
@@ -52,7 +62,7 @@ class SiteForm
                                 TextInput::make('slug')
                                 ->required(),
                                 TextInput::make('version')->required()
-                            ])->columns(1)->columnSpanFull(),
+                            ])->columns(3)->columnSpanFull(),
                     Repeater::make('colors')
                             ->schema([
                                 TextInput::make('name')
@@ -60,7 +70,7 @@ class SiteForm
                                 TextInput::make('variable')
                                 ->required(),
                                 TextInput::make('value')->required()
-                            ])->columns(1)->columnSpanFull(),
+                            ])->columns(3)->columnSpanFull(),
                     Repeater::make('typographies')
                             ->schema([
                                 TextInput::make('name')
@@ -68,7 +78,7 @@ class SiteForm
                                 TextInput::make('slug')
                                 ->required(),
                                 TextInput::make('value')->required()
-                            ])->columns(1)->columnSpanFull(),
+                            ])->columns(3)->columnSpanFull(),
                     Repeater::make('pages')
                             ->schema([
                                 TextInput::make('name')

@@ -2,6 +2,7 @@
 
 namespace App\Filament\SuperAdmin\Resources\Pages\Schemas;
 
+use App\Models\Category;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -33,12 +34,29 @@ class PagesForm
                 Textarea::make('content')
                     ->required()
                     ->label('Content'),
+                Repeater::make('dependencies')
+                    ->schema([
+                        TextInput::make('name')
+                            ->required(),
+                        TextInput::make('slug')
+                            ->required(),
+                        TextInput::make('version')->required()
+                    ])->columns(3)->columnSpanFull(),
                 TagsInput::make('tags')
                     ->suggestions([
                         'tailwindcss',
                         'alpinejs',
                         'laravel',
                         'livewire',
+                    ]),
+                Select::make('categories')
+                    ->multiple()
+                    ->relationship('categories', 'name')
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                            ->unique(table: Category::class),
                     ]),
                 MarkdownEditor::make('description')->columnSpanFull(),
                 FileUpload::make('image')

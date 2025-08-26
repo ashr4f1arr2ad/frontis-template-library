@@ -20,6 +20,7 @@ class PatternController extends Controller
                 return [
                     'name' => $category->name,
                     'slug' => $category->slug,
+                    'icon' => $category->icon,
                     'count' => $category->patterns_count,
                 ];
             });

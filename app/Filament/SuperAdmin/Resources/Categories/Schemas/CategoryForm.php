@@ -2,6 +2,7 @@
 
 namespace App\Filament\SuperAdmin\Resources\Categories\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
@@ -22,6 +23,12 @@ class CategoryForm
                     ->unique()
                     ->label('Slug')
                     ->readOnly(),
+                FileUpload::make('icon')
+                    ->disk('public')
+                    ->directory('categories')
+                    ->required()
+                    ->label('Category icon')
+                    ->uploadingMessage('Uploading icon...'),
             ]);
     }
 }
