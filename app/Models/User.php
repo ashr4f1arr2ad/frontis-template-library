@@ -9,11 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -49,9 +49,10 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    public function subscriptions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function subscriptions()
     {
-        return $this->belongsToMany(Subscription::class, 'subscription_user', 'user_id', 'subscription_id');
+        return $this->belongsToMany(Subscription::class, 'subscription_user', 'user_id', 'subscription_id')
+            ->withTimestamps();
     }
 
     public function canAccessPanel(Panel $panel): bool

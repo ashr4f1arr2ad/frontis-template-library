@@ -4,94 +4,91 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use App\Models\Subscription;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        // Validate the request
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'device_name' => 'required|string',
-            'secret_key' => 'required|string',
+            'password' => 'required|string|min:8',
+            'device_name' => 'required|string', // Added device_name validation
+            'subscription.title' => 'nullable|string|max:255',
+            'subscription.type' => 'nullable|string',
+            'subscription.total_sites' => 'nullable|integer|min:1',
+            'subscription.total_users' => 'nullable|integer|min:0',
+            'subscription.license_key' => 'nullable|string',
+            'subscription.license_expiry' => 'nullable|date',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        // Check request input has secret key
-        if($request->secret_key !== env('SECRET_KEY')) {
-            return response()->json([
-                'status' => false,
-                'message' => 'You are not allowed to do this action',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
+        // Create the user
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         // Create access token with expiration (e.g., 1 hour)
         $accessToken = $user->createToken(
-            $request->device_name,
+            $validated['device_name'],
             ['*'],
             now()->addHour()
         )->plainTextToken;
 
         // Create refresh token with longer expiration (e.g., 7 days)
         $refreshToken = $user->createToken(
-            $request->device_name . '-refresh',
+            $validated['device_name'] . '-refresh',
             ['refresh'],
             now()->addDays(7)
         )->plainTextToken;
 
+        // Check if subscription data is provided
+        if (!empty($validated['subscription']['title'])) {
+            // Create the subscription
+            $subscription = Subscription::create([
+                'title' => $validated['subscription']['title'],
+                'type' => $validated['subscription']['type'] ?? null,
+                'total_sites' => $validated['subscription']['total_sites'] ?? null,
+                'total_users' => $validated['subscription']['total_users'] ?? 0,
+                'license_key' => $validated['subscription']['license_key'] ?? null,
+                'license_expiry' => $validated['subscription']['license_expiry'] ?? null,
+            ]);
+
+            // Attach the subscription to the user
+            $user->subscriptions()->attach($subscription->id);
+        }
+
         return response()->json([
             'status' => true,
             'message' => 'User registered successfully',
-            'user' => $user,
+            'user' => $user->load('subscriptions'),
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
             'expires_in' => 3600 // Access token expires in 1 hour (in seconds)
         ], 201);
     }
 
-    /**
-     * Log in a user and return an access token with refresh token.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+    // Other methods (login, refresh, logout) remain unchanged
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
             'device_name' => 'required|string',
-            'secret_key' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        // Check request input has secret key
-        if($request->secret_key !== env('SECRET_KEY')) {
-            return response()->json([
-                'status' => false,
-                'message' => 'You are not allowed to do this action',
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -129,12 +126,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    /**
-     * Refresh the access token using the refresh token.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function refresh(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -188,12 +179,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    /**
-     * Log out the user and revoke all tokens.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('type');
             $table->integer('total_sites');
-            $table->integer('total_users')->default(0);
             $table->timestamps();
         });
     }

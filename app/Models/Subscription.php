@@ -11,10 +11,13 @@ class Subscription extends Model
         'type',
         'total_sites',
         'total_users',
+        'license_key',
+        'license_expiry',
     ];
 
-    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function users()
     {
-        return $this->belongsToMany(User::class, 'subscription_user', 'id', 'user_id');
+        return $this->belongsToMany(User::class, 'subscription_user', 'subscription_id', 'user_id')
+            ->withTimestamps();
     }
 }

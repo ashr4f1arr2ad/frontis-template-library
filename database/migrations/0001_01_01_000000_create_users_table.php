@@ -16,12 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('subscription')->nullable();
-            $table->string('subscription_type')->nullable();
-            $table->string('license_key')->nullable();
-            $table->string('license_expiry')->nullable();
-            $table->string('sub_users')->nullable();
-            $table->string('remaining_sub_users')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
