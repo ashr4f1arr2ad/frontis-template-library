@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ImportController;
+use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\PatternController;
+use App\Http\Controllers\Api\SiteController;
 use App\Http\Controllers\Api\UpdateSubscription;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SiteController;
-use App\Http\Controllers\PageController;
 
 Route::middleware('secret.key')->group(function () {
     Route::post('/sites', [SiteController::class, 'index']);

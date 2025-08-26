@@ -44,7 +44,7 @@ class SiteResource extends Resource
         return [
             'index' => ListSites::route('/'),
 //            'create' => CreateSite::route('/create'),
-            'edit' => EditSite::route('/{record}/edit'),
+//            'edit' => EditSite::route('/{record}/edit'),
         ];
     }
 

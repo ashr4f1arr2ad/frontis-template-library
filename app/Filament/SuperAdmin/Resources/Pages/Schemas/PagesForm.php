@@ -10,7 +10,6 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
-use App\Models\Tag;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TagsInput;
@@ -58,9 +57,15 @@ class PagesForm
                             ->required()
                             ->unique(table: Category::class),
                     ]),
+                Toggle::make('is_premium')
+                    ->label('Premium')
+                    ->required()->columns(3)->columnSpanFull(),
                 MarkdownEditor::make('description')->columnSpanFull(),
                 FileUpload::make('image')
                     ->required()
+                    ->disk('public')
+                    ->directory('pages')
+                    ->visibility('public')
                     ->label('Image')
                     ->uploadingMessage('Uploading image...')->columnSpanFull(),
                 Textarea::make('page_json')

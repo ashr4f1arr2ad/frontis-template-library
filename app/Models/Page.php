@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'slug', 'description', 'content', 'is_premium', 'image', 'tags', 'page_json'];
+    protected $fillable = ['title', 'slug', 'description', 'content', 'is_premium', 'dependencies', 'image', 'tags', 'page_json'];
+
     protected $casts = [
+        'dependencies' => 'array',
         'tags' => 'array',
+        'image' => 'array',
     ];
 
     public function categories()

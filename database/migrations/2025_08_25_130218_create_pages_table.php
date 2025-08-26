@@ -19,8 +19,9 @@ return new class extends Migration
             $table->json('tags');
             $table->text('description');
             $table->string('image')->nullable();
-            $table->json('dependencies');
+            $table->json('dependencies');;
             $table->boolean('is_premium')->default(false);
+            $table->json('page_json');
             $table->timestamps();
         });
     }
