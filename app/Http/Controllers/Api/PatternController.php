@@ -5,88 +5,45 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PatternResource;
 use App\Models\Pattern;
-use App\Models\Tag;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PatternController extends Controller
 {
-    public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function index()
     {
-        return PatternResource::collection(Pattern::with('tags')->get());
-    }
+        // Fetch categories with the count of associated patterns
+        $categories = Category::withCount('patterns')
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'count' => $category->patterns_count,
+                ];
+            });
 
-    public function show($id): PatternResource
-    {
-        return new PatternResource(Pattern::with('tags')->findOrFail($id));
-    }
+        // Fetch patterns with their associated categories
+        $patterns = Pattern::with('categories')
+            ->get()
+            ->map(function ($pattern) {
+                return [
+                    'id' => $pattern->id,
+                    'title' => $pattern->title,
+                    'slug' => $pattern->slug,
+                    'description' => $pattern->description,
+                    'is_premium' => $pattern->is_premium,
+                    'image' => $pattern->image,
+                    'tags' => $pattern->tags,
+                    'categories' => $pattern->categories->pluck('name')->toArray(),
+                ];
+            });
 
-    public function store(Request $request) {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:patterns',
-            'description' => 'nullable|string',
-            'is_premium' => 'boolean',
-            'image' => 'nullable|image|max:1024', // 1MB limit
-            'patterns' => 'nullable|array',
-            'tags' => 'nullable|array',
+        // Return the response in the desired JSON format
+        return response()->json([
+            'categories' => $categories,
+            'items' => $patterns,
         ]);
-
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('patterns', 'public');
-        }
-
-        $pattern = Pattern::create($validated);
-        if (isset($validated['tags'])) {
-            $tagIds = [];
-            foreach ($validated['tags'] as $tagName) {
-                $tag = Tag::firstOrCreate(
-                    ['name' => $tagName],
-                    ['slug' => Str::slug($tagName)]
-                );
-                $tagIds[] = $tag->id;
-            }
-            $pattern->tags()->sync($tagIds);
-        }
-
-        return new PatternResource($pattern->load('tags'));
-    }
-
-    public function update(Request $request, $id) {
-        $pattern = Pattern::findOrFail($id);
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:patterns,slug,' . $id,
-            'description' => 'nullable|string',
-            'is_premium' => 'boolean',
-            'image' => 'nullable|image|max:1024',
-            'patterns' => 'nullable|array',
-            'tags' => 'nullable|array',
-        ]);
-
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('patterns', 'public');
-        }
-
-        $pattern->update($validated);
-        if (isset($validated['tags'])) {
-            $tagIds = [];
-            foreach ($validated['tags'] as $tagName) {
-                $tag = Tag::firstOrCreate(
-                    ['name' => $tagName],
-                    ['slug' => Str::slug($tagName)]
-                );
-                $tagIds[] = $tag->id;
-            }
-            $pattern->tags()->sync($tagIds);
-        }
-
-        return new PatternResource($pattern->load('tags'));
-    }
-
-    public function destroy($id) {
-        $pattern = Pattern::findOrFail($id);
-        $pattern->delete();
-        return response()->json(['message' => 'Pattern deleted']);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\SuperAdmin\Resources\Patterns\Schemas;
 
+use App\Models\Category;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Grid;
@@ -52,6 +53,15 @@ class PatternForm
                     Textarea::make('pattern_json')
                         ->required()
                         ->label('Patterns JSON'),
+                    Select::make('categories')
+                        ->multiple()
+                        ->relationship('categories', 'name')
+                        ->preload()
+                        ->createOptionForm([
+                            TextInput::make('name')
+                                ->required()
+                                ->unique(table: Category::class),
+                        ]),
                 ]),
             ]);
     }

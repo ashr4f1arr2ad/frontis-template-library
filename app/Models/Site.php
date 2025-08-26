@@ -17,4 +17,9 @@ class Site extends Model
         'typographies' => 'array',
         'pages' => 'array',
     ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_site');
+    }
 }

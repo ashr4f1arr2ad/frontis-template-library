@@ -12,8 +12,9 @@ class Page extends Model
     protected $casts = [
         'tags' => 'array',
     ];
-    public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+
+    public function categories()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Category::class, 'category_page');
     }
 }

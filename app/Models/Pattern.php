@@ -9,10 +9,15 @@ class Pattern extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'slug', 'description', 'is_premium', 'image', 'pattern_json', 'tags'];
+    protected $fillable = ['title', 'slug', 'description', 'is_premium', 'image', 'pattern_json', 'tags', 'categories'];
 
     protected $casts = [
         'is_premium' => 'boolean',
         'tags' => 'array',
     ];
+
+    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_pattern');
+    }
 }
