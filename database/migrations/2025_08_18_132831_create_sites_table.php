@@ -20,6 +20,9 @@ return new class extends Migration
             $table->text('description');
             $table->string('image')->nullable();
             $table->json('dependencies');
+            $table->json('colors');
+            $table->json('typographies');
+            $table->json('pages');
             $table->boolean('is_premium')->default(false);
             $table->timestamps();
         });
