@@ -35,7 +35,7 @@ class PatternsTable
                 BooleanColumn::make('is_premium')
                     ->label('Premium')
                     ->sortable(),
-                TagsColumn::make('tags.name')
+                TagsColumn::make('tags')
                     ->label('Tags')
                     ->separator(',')
             ])
@@ -45,12 +45,7 @@ class PatternsTable
             ->options([
                 '1' => 'Premium',
                 '0' => 'Non-Premium',
-            ]),
-        SelectFilter::make('tags')
-            ->label('Tags')
-            ->relationship('tags', 'name')
-            ->multiple()
-            ->preload(),
+            ])
     ])
         ->recordActions([
             EditAction::make(),

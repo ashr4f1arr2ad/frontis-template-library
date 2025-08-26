@@ -14,9 +14,4 @@ class Site extends Model
         'dependencies' => 'array',
         'tags' => 'array',
     ];
-
-    public function tags(): BelongsToMany
-    {
-        return $this->belongsToMany(Tag::class, 'site_tag');
-    }
 }

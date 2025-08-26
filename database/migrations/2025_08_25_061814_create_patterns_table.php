@@ -18,7 +18,8 @@ return new class extends Migration
             $table->text('description');
             $table->boolean('is_premium')->default(false);
             $table->string('image')->nullable();
-            $table->json('patterns');
+            $table->json('tags');
+            $table->json('pattern_json');
             $table->timestamps();
         });
     }

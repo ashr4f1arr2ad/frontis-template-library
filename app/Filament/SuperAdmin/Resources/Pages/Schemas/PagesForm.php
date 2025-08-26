@@ -24,37 +24,29 @@ class PagesForm
                     ->required()
                     ->live()
                     ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
-                    TextInput::make('slug')
+                TextInput::make('slug')
                     ->required()
                     ->unique()
                     ->label('Slug')
                     ->readOnly(),
-                    Textarea::make('content')
+                Textarea::make('content')
                     ->required()
                     ->label('Content'),
-                    TagsInput::make('tags')
+                TagsInput::make('tags')
                     ->suggestions([
                         'tailwindcss',
                         'alpinejs',
                         'laravel',
                         'livewire',
                     ]),
-                    MarkdownEditor::make('description')->columnSpanFull(),
-                    FileUpload::make('image')
+                MarkdownEditor::make('description')->columnSpanFull(),
+                FileUpload::make('image')
                     ->required()
-                    ->label('Site Image')
+                    ->label('Image')
                     ->uploadingMessage('Uploading image...')->columnSpanFull(),
-                    Repeater::make('dependencies')
-                            ->schema([
-                                TextInput::make('name')
-                                ->required(),
-                                TextInput::make('slug')
-                                ->required(),
-                                TextInput::make('version')->required()
-                            ])->columns(2)->columnSpanFull(),
-                            Toggle::make('is_premium')
-                    ->label('Premium')
-                    ->required(),
+                Textarea::make('page_json')
+                    ->required()
+                    ->label('Page JSON'),
             ]);
     }
 }
