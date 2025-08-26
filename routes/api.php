@@ -8,10 +8,10 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\PatternController;
 use App\Http\Controllers\PageController;
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/sites', [SiteController::class, 'index']);
-    Route::get('/patterns', [PatternController::class, 'index']);
-    Route::get('/pages', [PageController::class, 'index']);
+Route::middleware('secret.key')->group(function () {
+    Route::post('/sites', [SiteController::class, 'index']);
+    Route::post('/patterns', [PatternController::class, 'index']);
+    Route::post('/pages', [PageController::class, 'index']);
 
     // Create user from wordpress site
     Route::post('/register', [AuthController::class, 'register']);

@@ -40,6 +40,8 @@ class PatternForm
                             'livewire',
                         ]),
                     FileUpload::make('image')
+                        ->disk('public')
+                        ->directory('patterns')
                         ->required()
                         ->label('Pattern Image')
                         ->uploadingMessage('Uploading image...'),
