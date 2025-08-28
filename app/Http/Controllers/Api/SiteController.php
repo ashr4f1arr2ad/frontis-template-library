@@ -28,6 +28,42 @@ class SiteController extends Controller
         $sites = Site::with('categories')
             ->get()
             ->map(function ($site) {
+                $typographies = collect($site->typographies)->mapWithKeys(function ($item) {
+                    return [
+                        $item['name'] => [
+                            'fontFamily' => $item['fontFamily'] ?? 'Default',
+                            'fontWeight' => $item['fontWeight'] ?? 'Default',
+                            'fontStyle' => $item['fontStyle'] ?? 'Default',
+                            'textTransform' => $item['textTransform'] ?? 'Default',
+                            'textDecoration' => $item['textDecoration'] ?? 'Default',
+                            'fontSize' => $item['fontSize'] ?? [],
+                            'fontSizeUnit' => $item['fontSizeUnit'] ?? [],
+                            'lineHeight' => $item['lineHeight'] ?? [],
+                            'lineHeightUnits' => $item['lineHeightUnits'] ?? [],
+                            'letterSpacing' => $item['letterSpacing'] ?? [],
+                            'letterSpacingUnit' => $item['letterSpacingUnit'] ?? [],
+                        ]
+                    ];
+                });
+
+                $custom_typographies = collect($site->custom_typographies)->mapWithKeys(function ($item) {
+                    return [
+                        $item['name'] => [
+                            'fontFamily' => $item['fontFamily'] ?? 'Default',
+                            'fontWeight' => $item['fontWeight'] ?? 'Default',
+                            'fontStyle' => $item['fontStyle'] ?? 'Default',
+                            'textTransform' => $item['textTransform'] ?? 'Default',
+                            'textDecoration' => $item['textDecoration'] ?? 'Default',
+                            'fontSize' => $item['fontSize'] ?? [],
+                            'fontSizeUnit' => $item['fontSizeUnit'] ?? [],
+                            'lineHeight' => $item['lineHeight'] ?? [],
+                            'lineHeightUnits' => $item['lineHeightUnits'] ?? [],
+                            'letterSpacing' => $item['letterSpacing'] ?? [],
+                            'letterSpacingUnit' => $item['letterSpacingUnit'] ?? [],
+                        ]
+                    ];
+                });
+
                 return [
                     'id' => $site->id,
                     'title' => $site->title,
@@ -37,7 +73,8 @@ class SiteController extends Controller
                     'image' => $site->image,
                     'tags' => $site->tags,
                     'dependencies' => $site->dependencies,
-                    'typographies' => $site->typographies,
+                    'typographies' => $typographies,
+                    'custom_typographies' => $custom_typographies,
                     'colors' => $site->colors,
                     'categories' => $site->categories->pluck('name')->toArray(),
                 ];

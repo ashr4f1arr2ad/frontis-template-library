@@ -22,6 +22,7 @@ return new class extends Migration
             $table->json('dependencies');
             $table->json('colors');
             $table->json('typographies');
+            $table->json('custom_typographies');
             $table->json('pages');
             $table->boolean('is_premium')->default(false);
             $table->timestamps();
