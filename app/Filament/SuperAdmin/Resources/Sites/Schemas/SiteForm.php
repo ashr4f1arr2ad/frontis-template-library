@@ -45,7 +45,7 @@ class SiteForm
                         'alpinejs',
                         'laravel',
                         'livewire',
-                    ])->columnSpanFull(),
+                    ])->required()->columnSpanFull(),
                 Select::make('categories')
                     ->multiple()
                     ->relationship('categories', 'name')
@@ -54,8 +54,8 @@ class SiteForm
                         TextInput::make('name')
                             ->required()
                             ->unique(table: Category::class),
-                    ])->columns(3)->columnSpanFull(),
-                MarkdownEditor::make('description')->columnSpanFull(),
+                    ])->required()->columns(3)->columnSpanFull(),
+                MarkdownEditor::make('description')->required()->columnSpanFull(),
                 FileUpload::make('image')
                     ->required()
                     ->disk('public')
@@ -100,8 +100,7 @@ class SiteForm
                             ])
                             ->schema([
                                 TextInput::make('fontFamily')
-                                        ->label('Font Family')
-                                        ->default('Default'),
+                                        ->label('Font Family'),
                                 Select::make('fontWeight')
                                         ->options([
                                             'Default'=>'Default','100'=>'Thin','200'=>'Extra Light','300'=>'Light',
@@ -128,19 +127,19 @@ class SiteForm
                                     ->schema([
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('fontSize.Desktop')->label('Desktop'),
+                                                    TextInput::make('fontSize.Desktop')->label('Desktop')->numeric(),
                                                     Select::make('fontSizeUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('fontSize.Tablet')->label('Tablet'),
+                                                    TextInput::make('fontSize.Tablet')->label('Tablet')->numeric(),
                                                     Select::make('fontSizeUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('fontSize.Mobile')->label('Mobile'),
+                                                    TextInput::make('fontSize.Mobile')->label('Mobile')->numeric(),
                                                     Select::make('fontSizeUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
@@ -154,19 +153,19 @@ class SiteForm
                                     ->schema([
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('lineHeight.Desktop')->label('Desktop'),
+                                                    TextInput::make('lineHeight.Desktop')->label('Desktop')->numeric(),
                                                     Select::make('lineHeightUnits.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('lineHeight.Tablet')->label('Tablet'),
+                                                    TextInput::make('lineHeight.Tablet')->label('Tablet')->numeric(),
                                                     Select::make('lineHeightUnits.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('lineHeight.Mobile')->label('Mobile'),
+                                                    TextInput::make('lineHeight.Mobile')->label('Mobile')->numeric(),
                                                     Select::make('lineHeightUnits.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
@@ -180,19 +179,19 @@ class SiteForm
                                     ->schema([
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('letterSpacing.Desktop')->label('Desktop')->default('Default'),
+                                                    TextInput::make('letterSpacing.Desktop')->label('Desktop')->numeric(),
                                                     Select::make('letterSpacingUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('letterSpacing.Tablet')->label('Tablet')->default('Default'),
+                                                    TextInput::make('letterSpacing.Tablet')->label('Tablet')->numeric(),
                                                     Select::make('letterSpacingUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('letterSpacing.Mobile')->label('Mobile')->default('Default'),
+                                                    TextInput::make('letterSpacing.Mobile')->label('Mobile')->numeric(),
                                                     Select::make('letterSpacingUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
@@ -211,8 +210,7 @@ class SiteForm
                             ])
                             ->schema([
                                 TextInput::make('fontFamily')
-                                        ->label('Font Family')
-                                        ->default('Default'),
+                                        ->label('Font Family'),
                                 Select::make('fontWeight')
                                         ->options([
                                             'Default'=>'Default','100'=>'Thin','200'=>'Extra Light','300'=>'Light',
@@ -239,19 +237,19 @@ class SiteForm
                                     ->schema([
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('fontSize.Desktop')->label('Desktop'),
+                                                    TextInput::make('fontSize.Desktop')->label('Desktop')->numeric(),
                                                     Select::make('fontSizeUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('fontSize.Tablet')->label('Tablet'),
+                                                    TextInput::make('fontSize.Tablet')->label('Tablet')->numeric(),
                                                     Select::make('fontSizeUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('fontSize.Mobile')->label('Mobile'),
+                                                    TextInput::make('fontSize.Mobile')->label('Mobile')->numeric(),
                                                     Select::make('fontSizeUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
@@ -265,19 +263,19 @@ class SiteForm
                                     ->schema([
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('lineHeight.Desktop')->label('Desktop'),
+                                                    TextInput::make('lineHeight.Desktop')->label('Desktop')->numeric(),
                                                     Select::make('lineHeightUnits.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('lineHeight.Tablet')->label('Tablet'),
+                                                    TextInput::make('lineHeight.Tablet')->label('Tablet')->numeric(),
                                                     Select::make('lineHeightUnits.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('lineHeight.Mobile')->label('Mobile'),
+                                                    TextInput::make('lineHeight.Mobile')->label('Mobile')->numeric(),
                                                     Select::make('lineHeightUnits.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
@@ -291,19 +289,19 @@ class SiteForm
                                     ->schema([
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('letterSpacing.Desktop')->label('Desktop')->default('Default'),
+                                                    TextInput::make('letterSpacing.Desktop')->label('Desktop')->numeric(),
                                                     Select::make('letterSpacingUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('letterSpacing.Tablet')->label('Tablet')->default('Default'),
+                                                    TextInput::make('letterSpacing.Tablet')->label('Tablet')->numeric(),
                                                     Select::make('letterSpacingUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
                                         Section::make()
                                                 ->schema([
-                                                    TextInput::make('letterSpacing.Mobile')->label('Mobile')->default('Default'),
+                                                    TextInput::make('letterSpacing.Mobile')->label('Mobile')->numeric(),
                                                     Select::make('letterSpacingUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
                                                 ])
                                                 ->columns(2),
