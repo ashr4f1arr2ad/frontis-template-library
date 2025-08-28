@@ -78,6 +78,15 @@ class SiteForm
                             ->required(),
                             ColorPicker::make('value')->required()
                         ])->columns(3)->columnSpanFull(),
+                Repeater::make('color_gradients')
+                        ->schema([
+                            TextInput::make('name')
+                            ->required(),
+                            TextInput::make('slug')
+                            ->required(),
+                            TextInput::make('value')
+                            ->required(),
+                        ])->columns(3)->columnSpanFull(),
                 Repeater::make('typographies')
                         ->schema([
                             TextInput::make('name')

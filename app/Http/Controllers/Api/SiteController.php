@@ -76,6 +76,7 @@ class SiteController extends Controller
                     'typographies' => $typographies,
                     'custom_typographies' => $custom_typographies,
                     'colors' => $site->colors,
+                    'color_gradients' => $site->color_gradients,
                     'categories' => $site->categories->pluck('name')->toArray(),
                 ];
             });
