@@ -13,6 +13,7 @@ class SiteController extends Controller
     {
         // Fetch categories with the count of associated patterns
         $categories = Category::withCount('sites')
+            ->whereHas('sites')
             ->get()
             ->map(function ($category) {
                 return [

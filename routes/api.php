@@ -24,4 +24,5 @@ Route::middleware('secret.key')->group(function () {
     // Import handler
     Route::post('/import/pattern', [ImportController::class, 'pattern']);
     Route::post('/import/page', [ImportController::class, 'page']);
+    Route::post('/import/site', [ImportController::class, 'site']);
 });

@@ -14,13 +14,14 @@ class PageController extends Controller
     {
         // Fetch categories with the count of associated patterns
         $categories = Category::withCount('pages')
+            ->whereHas('pages')
             ->get()
             ->map(function ($category) {
                 return [
                     'name' => $category->name,
                     'slug' => $category->slug,
                     'icon' => $category->icon,
-                    'count' => $category->patterns_count,
+                    'count' => $category->pages_count,
                 ];
             });
 

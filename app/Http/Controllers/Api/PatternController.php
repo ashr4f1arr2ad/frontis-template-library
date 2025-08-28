@@ -15,6 +15,7 @@ class PatternController extends Controller
     {
         // Fetch categories with the count of associated patterns
         $categories = Category::withCount('patterns')
+            ->whereHas('patterns')
             ->get()
             ->map(function ($category) {
                 return [
@@ -45,6 +46,8 @@ class PatternController extends Controller
         return response()->json([
             'categories' => $categories,
             'items' => $patterns,
-        ]);
+        ])->header('Access-Control-Allow-Origin', 'http://frontis.local')
+            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     }
 }
