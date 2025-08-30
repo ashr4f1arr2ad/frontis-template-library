@@ -63,6 +63,14 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(License::class, 'license_id');
     }
 
+    /**
+     * Get the clouds associated with the user.
+     */
+    public function clouds(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Cloud::class);
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'super-admin') {
