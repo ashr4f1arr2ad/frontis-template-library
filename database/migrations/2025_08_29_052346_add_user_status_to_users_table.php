@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('licenses', function (Blueprint $table) {
-            $table->id();
-            $table->string('license_key');
-            $table->string('expiration_date')->nullable();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('user_status')->default(true);
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('licenses');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('user_status');
+        });
     }
 };

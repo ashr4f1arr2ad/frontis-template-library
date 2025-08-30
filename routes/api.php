@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\ImportController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\PatternController;
 use App\Http\Controllers\Api\SiteController;
-use App\Http\Controllers\Api\UpdateSubscription;
+use App\Http\Controllers\Api\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('secret.key')->group(function () {
@@ -19,7 +19,8 @@ Route::middleware('secret.key')->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh']);
 
     // Update subscription
-    Route::post('/update', [UpdateSubscription::class, 'update']);
+    Route::post('/update', [SubscriptionController::class, 'update']);
+    Route::post('/upgrade-pro', [SubscriptionController::class, 'upgrade']);
 
     // Import handler
     Route::post('/import/pattern', [ImportController::class, 'pattern']);
