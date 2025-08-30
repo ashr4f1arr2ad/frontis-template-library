@@ -10,17 +10,96 @@ use App\Models\Subscription;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
+use OpenApi\Attributes as OA;
 
+/**
+ * @OA\Info(
+ *     title="Users API",
+ *     description="API endpoints for managing users",
+ *     version="1.0.0"
+ * )
+ * @OA\Server(
+ *     url="http://localhost:8000/api",
+ *     description="Local development server"
+ * )
+ * @OA\SecurityScheme(
+ *     securityScheme="sanctum",
+ *     type="apiKey",
+ *     in="header",
+ *     name="Authorization",
+ *     description="Enter token in format (Bearer <token>)"
+ * )
+ */
 class AuthController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     summary="Register a new user",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password", "device_name"},
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123"),
+     *             @OA\Property(property="device_name", type="string", example="web"),
+     *             @OA\Property(
+     *                 property="subscription",
+     *                 type="object",
+     *                 nullable=true,
+     *                 @OA\Property(property="title", type="string", example="Pro Plan"),
+     *                 @OA\Property(property="type", type="string", example="monthly"),
+     *                 @OA\Property(property="total_sites", type="integer", example=5),
+     *                 @OA\Property(property="total_users", type="integer", example=2),
+     *                 @OA\Property(property="license_key", type="string", example="abc123"),
+     *                 @OA\Property(property="license_expiry", type="string", format="date", example="2025-12-31")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="User registered successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="User registered successfully"),
+     *             @OA\Property(property="user", ref="#/components/schemas/User"),
+     *             @OA\Property(property="access_token", type="string", example="1|abcdef"),
+     *             @OA\Property(property="refresh_token", type="string", example="2|ghijk"),
+     *             @OA\Property(property="expires_in", type="integer", example=3600)
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
+     * @OA\Schema(
+     *     schema="User",
+     *     type="object",
+     *     @OA\Property(property="id", type="integer"),
+     *     @OA\Property(property="name", type="string"),
+     *     @OA\Property(property="email", type="string"),
+     *     @OA\Property(
+     *         property="subscriptions",
+     *         type="array",
+     *         @OA\Items(
+     *             type="object",
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="type", type="string"),
+     *             @OA\Property(property="total_sites", type="integer"),
+     *             @OA\Property(property="total_users", type="integer"),
+     *             @OA\Property(property="license_key", type="string"),
+     *             @OA\Property(property="license_expiry", type="string", format="date")
+     *         )
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
-        // Validate the request
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'device_name' => 'required|string', // Added device_name validation
+            'device_name' => 'required|string',
             'subscription.title' => 'nullable|string|max:255',
             'subscription.type' => 'nullable|string',
             'subscription.total_sites' => 'nullable|integer|min:1',
@@ -29,30 +108,25 @@ class AuthController extends Controller
             'subscription.license_expiry' => 'nullable|date',
         ]);
 
-        // Create the user
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
 
-        // Create access token with expiration (e.g., 1 hour)
         $accessToken = $user->createToken(
             $validated['device_name'],
             ['*'],
             now()->addHour()
         )->plainTextToken;
 
-        // Create refresh token with longer expiration (e.g., 7 days)
         $refreshToken = $user->createToken(
             $validated['device_name'] . '-refresh',
             ['refresh'],
             now()->addDays(7)
         )->plainTextToken;
 
-        // Check if subscription data is provided
         if (!empty($validated['subscription']['title'])) {
-            // Create the subscription
             $subscription = Subscription::create([
                 'title' => $validated['subscription']['title'],
                 'type' => $validated['subscription']['type'] ?? null,
@@ -62,7 +136,6 @@ class AuthController extends Controller
                 'license_expiry' => $validated['subscription']['license_expiry'] ?? null,
             ]);
 
-            // Attach the subscription to the user
             $user->subscriptions()->attach($subscription->id);
         }
 
@@ -72,11 +145,40 @@ class AuthController extends Controller
             'user' => $user->load('subscriptions'),
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
-            'expires_in' => 3600 // Access token expires in 1 hour (in seconds)
+            'expires_in' => 3600
         ], 201);
     }
 
-    // Other methods (login, refresh, logout) remain unchanged
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="Log in a user",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password", "device_name"},
+     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123"),
+     *             @OA\Property(property="device_name", type="string", example="web")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Login successful"),
+     *             @OA\Property(property="user", ref="#/components/schemas/User"),
+     *             @OA\Property(property="access_token", type="string", example="1|abcdef"),
+     *             @OA\Property(property="refresh_token", type="string", example="2|ghijk"),
+     *             @OA\Property(property="expires_in", type="integer", example=3600)
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Invalid credentials"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -102,14 +204,12 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Create access token with expiration (e.g., 1 hour)
         $accessToken = $user->createToken(
             $request->device_name,
             ['*'],
             now()->addHour()
         )->plainTextToken;
 
-        // Create refresh token with longer expiration (e.g., 7 days)
         $refreshToken = $user->createToken(
             $request->device_name . '-refresh',
             ['refresh'],
@@ -122,10 +222,38 @@ class AuthController extends Controller
             'user' => $user,
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
-            'expires_in' => 3600 // Access token expires in 1 hour (in seconds)
+            'expires_in' => 3600
         ], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/refresh",
+     *     summary="Refresh user token",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"refresh_token", "device_name"},
+     *             @OA\Property(property="refresh_token", type="string", example="2|ghijk"),
+     *             @OA\Property(property="device_name", type="string", example="web")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Token refreshed successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Token refreshed successfully"),
+     *             @OA\Property(property="access_token", type="string", example="3|newtoken"),
+     *             @OA\Property(property="refresh_token", type="string", example="4|newrefresh"),
+     *             @OA\Property(property="expires_in", type="integer", example=3600)
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Invalid or expired refresh token"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
+     */
     public function refresh(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -141,7 +269,6 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // Find the refresh token
         $refreshToken = PersonalAccessToken::findToken($request->refresh_token);
 
         if (!$refreshToken || !$refreshToken->tokenable || !in_array('refresh', $refreshToken->abilities)) {
@@ -151,19 +278,16 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Revoke the old refresh token
         $refreshToken->delete();
 
         $user = $refreshToken->tokenable;
 
-        // Create new access token
         $newAccessToken = $user->createToken(
             $request->device_name,
             ['*'],
             now()->addHour()
         )->plainTextToken;
 
-        // Create new refresh token
         $newRefreshToken = $user->createToken(
             $request->device_name . '-refresh',
             ['refresh'],
@@ -175,10 +299,27 @@ class AuthController extends Controller
             'message' => 'Token refreshed successfully',
             'access_token' => $newAccessToken,
             'refresh_token' => $newRefreshToken,
-            'expires_in' => 3600 // New access token expires in 1 hour
+            'expires_in' => 3600
         ], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="Log out a user",
+     *     tags={"Authentication"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logged out successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Logged out successfully")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized")
+     * )
+     */
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
