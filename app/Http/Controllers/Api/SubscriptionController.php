@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Subscription;
 use App\Models\License;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class SubscriptionController extends Controller
 {
@@ -70,7 +71,8 @@ class SubscriptionController extends Controller
                 'type' => $validated['subscription']['type'] ?? null,
                 'total_sites' => $validated['subscription']['total_sites'] ?? 1,
                 'total_users' => $validated['subscription']['total_users'] ?? 0,
-                'license_key' => $validated['subscription']['license_key'] ?? null
+                'license_key' => $validated['subscription']['license_key'] ?? null,
+                'license_expiry' => $validated['subscription']['license_expiry'] ?? null,
             ]);
 
             // Attach the new subscription to the user
@@ -90,14 +92,18 @@ class SubscriptionController extends Controller
         ], 200);
     }
 
-    public function upgrade(Request $request) {
+    public function upgrade(Request $request): \Illuminate\Http\JsonResponse
+    {
         // Validate the request
         $validated = $request->validate([
             'email' => 'required|string|email|max:255', // Removed unique constraint
             'title' => 'nullable|string|max:255',
             'type' => 'nullable|string',
-            'license_key' => 'nullable|string'
+            'license_key' => 'nullable|string',
+            'total_users' => 'required|integer|min:1',
+            'expire_date' => 'required|string|date',
         ]);
+
 
         // Find the user by email
         $user = User::where('email', $validated['email'])->first();
@@ -110,18 +116,20 @@ class SubscriptionController extends Controller
         }
 
         $newSubscription = Subscription::create([
-            'title'   => $validated['title'] ?? null,
-            'type'    => $validated['type'] ?? null,
+            'title' => $validated['title'] ?? null,
+            'type' => $validated['type'] ?? null,
+            'total_users' => $validated['total_users'] ?? 0,
+            'expire_date' => $validated['expire_date'] ?? null,
         ]);
-        
+
         $user->subscriptions()->attach($newSubscription->id);
 
         if (!empty($validated['license_key']) && !$user->license_id) {
             $license = License::create([
-                'license_key'   => $validated['license_key'] ?? null
+                'license_key' => $validated['license_key'] ?? null
             ]);
-    
-            // 6. Update user's license_id column
+
+            // Update user's license_id column
             $user->update([
                 'license_id' => $license->id
             ]);
@@ -129,7 +137,23 @@ class SubscriptionController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Subscription Added Succesfully',
+            'message' => 'Subscription Added Successfully',
         ], 200);
+    }
+
+    public function upgrade_subscription(Request $request): \Illuminate\Http\JsonResponse
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'email' => 'required|string|email|max:255', // Removed unique constraint
+            'title' => 'nullable|string|max:255',
+            'type' => 'nullable|string',
+            'license_key' => 'nullable|string',
+            'total_users' => 'required|integer|min:1',
+            'expire_date' => 'required|string',
+        ]);
+
+
+        dd($validated);
     }
 }

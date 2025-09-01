@@ -9,10 +9,12 @@ class Subscription extends Model
     protected $fillable = [
         'title',
         'type',
-        'total_sites',
+        'sites',
+        'total_used_sites',
         'total_users',
         'license_key',
-        'license_expiry',
+        'expire_date',
+        'status'
     ];
 
     public function users()

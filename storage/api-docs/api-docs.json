@@ -9,6 +9,10 @@
         {
             "url": "http://localhost:8000/api",
             "description": "Local development server"
+        },
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Local development server"
         }
     ],
     "paths": {
@@ -320,6 +324,343 @@
                     }
                 ]
             }
+        },
+        "/subscriptions": {
+            "patch": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Update or create a subscription for a user",
+                "operationId": "28486d0e2a6cc0dda2436fe0c5a92549",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255,
+                                        "example": "user@example.com"
+                                    },
+                                    "subscription": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Subscription ID for updating an existing subscription",
+                                                "type": "integer",
+                                                "example": 1,
+                                                "nullable": true
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Premium Plan",
+                                                "nullable": true
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "monthly",
+                                                "nullable": true
+                                            },
+                                            "total_sites": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "example": 5,
+                                                "nullable": true
+                                            },
+                                            "total_users": {
+                                                "type": "integer",
+                                                "minimum": 0,
+                                                "example": 10,
+                                                "nullable": true
+                                            },
+                                            "license_key": {
+                                                "type": "string",
+                                                "example": "ABC123-XYZ789",
+                                                "nullable": true
+                                            },
+                                            "license_expiry": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2025-12-31",
+                                                "nullable": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Subscription updated successfully or no subscription data provided",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Subscription updated successfully"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "user@example.com"
+                                                },
+                                                "subscriptions": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Premium Plan"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "monthly"
+                                                            },
+                                                            "total_sites": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            },
+                                                            "total_users": {
+                                                                "type": "integer",
+                                                                "example": 10
+                                                            },
+                                                            "license_key": {
+                                                                "type": "string",
+                                                                "example": "ABC123-XYZ789"
+                                                            },
+                                                            "license_expiry": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-12-31"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Subscription created and assigned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Subscription created and assigned successfully"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "user@example.com"
+                                                },
+                                                "subscriptions": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Premium Plan"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "monthly"
+                                                            },
+                                                            "total_sites": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            },
+                                                            "total_users": {
+                                                                "type": "integer",
+                                                                "example": 10
+                                                            },
+                                                            "license_key": {
+                                                                "type": "string",
+                                                                "example": "ABC123-XYZ789"
+                                                            },
+                                                            "license_expiry": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-12-31"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User or subscription not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/subscriptions/upgrade": {
+            "post": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Upgrade a user's subscription",
+                "operationId": "e7090ef1eb0827d4fb956268860e75ea",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255,
+                                        "example": "user@example.com"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Premium Plan",
+                                        "nullable": true
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "monthly",
+                                        "nullable": true
+                                    },
+                                    "license_key": {
+                                        "type": "string",
+                                        "example": "ABC123-XYZ789",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Subscription added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Subscription Added Successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -379,6 +720,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Subscriptions",
+            "description": "Subscriptions"
         }
     ]
 }

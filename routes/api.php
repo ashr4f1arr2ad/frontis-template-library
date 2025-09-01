@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ActiveLicense;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CloudController;
 use App\Http\Controllers\Api\ImportController;
@@ -30,4 +31,7 @@ Route::middleware('secret.key')->group(function () {
 
     // Save item to cloud
     Route::post('/cloud/saved-item', [CloudController::class, 'saved_item']);
+
+    // Active license key
+    Route::post('/active/license', [ActiveLicense::class, 'activate']);
 });

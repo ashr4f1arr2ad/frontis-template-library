@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('type');
             $table->integer('total_used_sites')->default(0);
             $table->json('sites')->nullable();
+            $table->integer('total_users')->default(0);
+            $table->date('expire_date');
             $table->timestamps();
         });
     }

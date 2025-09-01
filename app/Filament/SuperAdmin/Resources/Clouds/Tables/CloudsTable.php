@@ -23,7 +23,6 @@ class CloudsTable
                     ->label('User')
                     ->sortable()
                     ->searchable()
-                    ->url(fn ($record) => route('filament.superAdmin.resources.users.view', $record->user_id))
             ])
             ->filters([
                 // Add filters if needed, e.g., filter by item_type
