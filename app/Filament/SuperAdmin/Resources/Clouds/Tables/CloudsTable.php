@@ -29,20 +29,21 @@ class CloudsTable
                 // Add filters if needed, e.g., filter by item_type
             ])
             ->recordActions([
-                ViewAction::make(),
-//                EditAction::make(),
+                ViewAction::make()
+                    ->label('View')
+                    ->modal() // Enable modal for the view action
+                    ->modalContent(fn ($record) => view('filament.superAdmin.resources.clouds.pages.view-cloud', [
+                        'record' => $record,
+                    ]))
+                    ->modalHeading(fn ($record) => "View Cloud: {$record->id}"), // Customize modal heading
                 DeleteAction::make()->label('Remove'),
-            ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-//                EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            // Optional: Make table rows clickable to open the view modal
+            ->recordUrl(null); // Disable default URL navigation
     }
 }

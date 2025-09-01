@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('clouds', function (Blueprint $table) {
-            $table->string('item_type')->after('saved_item_id'); // Add item_type after saved_item_id
+            $table->string('item_type')->after('item_id'); // Add item_type after saved_item_id
         });
     }
 

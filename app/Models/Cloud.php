@@ -8,12 +8,12 @@ class Cloud extends Model
 {
     protected $fillable = ['user_id', 'item_id', 'item_type', 'data', 'website'];
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function item()
+    public function item(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();
     }

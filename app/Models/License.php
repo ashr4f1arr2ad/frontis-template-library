@@ -8,11 +8,13 @@ class License extends Model
 {
     protected $fillable = ['license_key', 'expiration_date'];
 
-    /**
-     * Get the users associated with this license.
+    /*
+     * Get the user associated with this license (one-to-one).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function users()
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasMany(User::class, 'license_id');
+        return $this->hasOne(User::class, 'license_id');
     }
 }

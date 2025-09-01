@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CloudController;
 use App\Http\Controllers\Api\ImportController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\PatternController;
@@ -26,4 +27,7 @@ Route::middleware('secret.key')->group(function () {
     Route::post('/import/pattern', [ImportController::class, 'pattern']);
     Route::post('/import/page', [ImportController::class, 'page']);
     Route::post('/import/site', [ImportController::class, 'site']);
+
+    // Save item to cloud
+    Route::post('/cloud/saved-item', [CloudController::class, 'saved_item']);
 });

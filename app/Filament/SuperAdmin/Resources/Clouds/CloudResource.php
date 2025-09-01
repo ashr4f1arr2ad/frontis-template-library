@@ -2,9 +2,8 @@
 
 namespace App\Filament\SuperAdmin\Resources\Clouds;
 
-use App\Filament\SuperAdmin\Resources\Clouds\Pages\CreateCloud;
-use App\Filament\SuperAdmin\Resources\Clouds\Pages\EditCloud;
 use App\Filament\SuperAdmin\Resources\Clouds\Pages\ListClouds;
+use App\Filament\SuperAdmin\Resources\Clouds\Pages\ViewCloud; // Add this import
 use App\Filament\SuperAdmin\Resources\Clouds\Schemas\CloudForm;
 use App\Filament\SuperAdmin\Resources\Clouds\Tables\CloudsTable;
 use App\Models\Cloud;
@@ -41,8 +40,9 @@ class CloudResource extends Resource
     {
         return [
             'index' => ListClouds::route('/'),
-//            'create' => CreateCloud::route('/create'),
-//            'edit' => EditCloud::route('/{record}/edit'),
+            'view' => ViewCloud::route('/{record}'), // Add view route
+            // 'create' => CreateCloud::route('/create'),
+            // 'edit' => EditCloud::route('/{record}/edit'),
         ];
     }
 }

@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('clouds', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('saved_item_id');
+            $table->unsignedBigInteger('item_id')->nullable();
             $table->json('data');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('website');
