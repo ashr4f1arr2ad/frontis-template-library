@@ -23,6 +23,7 @@ Route::middleware('secret.key')->group(function () {
     // Update subscription
     Route::post('/update', [SubscriptionController::class, 'update']);
     Route::post('/upgrade-pro', [SubscriptionController::class, 'upgrade']);
+    Route::post('/upgrade-pro', [SubscriptionController::class, 'upgrade']);
 
     // Import handler
     Route::post('/import/pattern', [ImportController::class, 'pattern']);

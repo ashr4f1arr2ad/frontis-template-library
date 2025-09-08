@@ -14,7 +14,8 @@ class Subscription extends Model
         'total_users',
         'license_key',
         'expire_date',
-        'status'
+        'status',
+        'subscription_id'
     ];
 
     public function users()

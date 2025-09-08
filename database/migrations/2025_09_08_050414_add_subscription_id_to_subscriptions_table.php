@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('subscriptions', function (Blueprint $table) {
-            $table->boolean('status')->default(true)->after('expire_date');
+            $table->string('subscription_id')->nullable()->after('expire_date');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('subscriptions', function (Blueprint $table) {
-            $table->dropColumn('status');
+            $table->dropColumn('subscription_id');
         });
     }
 };
