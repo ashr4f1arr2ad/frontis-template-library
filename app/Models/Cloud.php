@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cloud extends Model
 {
-    protected $fillable = ['user_id', 'item_id', 'item_type', 'data', 'website'];
+    protected $fillable = ['user_id', 'item_id', 'item_type', 'data', 'website', 'sub_user'];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

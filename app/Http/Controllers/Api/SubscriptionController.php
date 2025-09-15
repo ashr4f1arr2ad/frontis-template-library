@@ -8,6 +8,7 @@ use App\Models\Subscription;
 use App\Models\License;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
+use Carbon\Carbon;
 
 class SubscriptionController extends Controller
 {
@@ -15,7 +16,7 @@ class SubscriptionController extends Controller
     {
         // Validate the request
         $validated = $request->validate([
-            'email' => 'required|string|email|max:255', // Removed unique constraint
+            'email' => 'required|string|email|max:255',
             'subscription.title' => 'nullable|string|max:255',
             'subscription.type' => 'nullable|string',
             'subscription.total_sites' => 'nullable|integer|min:1',
@@ -155,5 +156,63 @@ class SubscriptionController extends Controller
 
 
         dd($validated);
+    }
+
+    public function verify_subscription(Request $request): \Illuminate\Http\JsonResponse 
+    {
+        $validated = $request->validate([
+            'license_key' => 'nullable|string',
+            'domain_name' => 'nullable|string'
+        ]);
+
+        $license = License::where('license_key', $validated['license_key'])->first();
+
+        if (!$license) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid license key',
+            ], 404);
+        }
+
+        $user = User::find($license->id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        $subscriptions = $user->subscriptions;
+
+        $currentDate = Carbon::now();
+
+        $validByDate = $subscriptions->filter(function ($subscription) use ($currentDate) {
+            return $subscription->expire_date && Carbon::parse($subscription->expire_date)->isFuture();
+        });
+
+        if ($validByDate->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No active subscription found (expired)',
+            ], 403);
+        }
+
+        $validByDomain = $validByDate->filter(function ($subscription) use ($validated) {
+            $sites = is_string($subscription->sites) ? json_decode($subscription->sites, true) : $subscription->sites;
+            return is_array($sites) && in_array($validated['domain_name'], $sites);
+        });
+    
+        if ($validByDomain->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No subscription found for this domain',
+            ], 403);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Subscription verify successfully'
+        ], 200);
     }
 }

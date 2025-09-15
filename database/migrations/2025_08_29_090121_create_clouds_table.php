@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('clouds', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('item_id')->nullable();
-            $table->json('data');
+            $table->json('data')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('website');
             $table->timestamps();

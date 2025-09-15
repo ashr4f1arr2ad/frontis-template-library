@@ -14,6 +14,7 @@ Route::middleware('secret.key')->group(function () {
     Route::post('/sites', [SiteController::class, 'index']);
     Route::post('/patterns', [PatternController::class, 'index']);
     Route::post('/pages', [PageController::class, 'index']);
+    Route::post('/clouds', [CloudController::class, 'index']);
 
     // Create user from wordpress site
     Route::post('/register', [AuthController::class, 'register']);
@@ -23,7 +24,7 @@ Route::middleware('secret.key')->group(function () {
     // Update subscription
     Route::post('/update', [SubscriptionController::class, 'update']);
     Route::post('/upgrade-pro', [SubscriptionController::class, 'upgrade']);
-    Route::post('/upgrade-pro', [SubscriptionController::class, 'upgrade']);
+    Route::post('/verify-subscription', [SubscriptionController::class, 'verify_subscription']);
 
     // Import handler
     Route::post('/import/pattern', [ImportController::class, 'pattern']);
