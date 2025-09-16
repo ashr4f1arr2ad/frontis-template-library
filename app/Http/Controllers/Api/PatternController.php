@@ -18,9 +18,9 @@ class PatternController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
+        // Step 1: Validate "logged_in"
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'license_key' => 'required|string|max:255'
+            'logged_in' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -31,59 +31,68 @@ class PatternController extends Controller
             ], 422);
         }
 
-        // Find the license by license_key
-        $license = License::where('license_key', $request->input('license_key'))->first();
-        if (!$license) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'License not found',
-            ], 404);
+        $savedItems = [];
+
+        // Step 2: If user is logged in, validate license & email
+        if ($request->input('logged_in') === 'true') {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'license_key' => 'required|string|max:255'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $license = License::where('license_key', $request->license_key)->first();
+
+            if (!$license) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'License not found',
+                ], 404);
+            }
+
+            $user = $license->user;
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No user associated with this license',
+                ], 404);
+            }
+
+            $sub_user = User::where('email', $request->email)->first();
+
+            if ($sub_user) {
+                $query = Cloud::where('user_id', $user->id);
+
+                if ($sub_user->id === $user->id) {
+                    $query->whereNull('sub_user'); // Main user
+                } else {
+                    $query->where('sub_user', $sub_user->id); // Sub-user
+                }
+
+                $savedItems = $query->pluck('item_id')->map(fn($id) => (int)$id)->toArray();
+            }
         }
 
-        // Get the user associated with the license
-        $user = $license->user;
-        if (!$user) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'No user associated with this license',
-            ], 404);
-        }
-
-        $sub_user = User::where('email', $request->input('email'))->first();
-
-        // Determine saved items based on user type
-        if ($sub_user->id === $user->id) {
-            // Main user: Fetch items where user_id matches and sub_user is null
-            $savedItems = Cloud::where('user_id', $user->id)
-                ->whereNull('sub_user')
-                ->pluck('item_id')
-                ->map(fn($id) => (int)$id)
-                ->toArray();
-        } else {
-            // Sub-user: Fetch items where user_id matches main user and sub_user matches sub_user
-            $savedItems = Cloud::where('user_id', $user->id)
-                ->where('sub_user', $sub_user->id)
-                ->pluck('item_id')
-                ->map(fn($id) => (int)$id)
-                ->toArray();
-        }
-
-        // Fetch categories with the count of associated patterns
+        // Step 3: Fetch categories with count (common for both cases)
         $categories = Category::withCount('patterns')
             ->whereHas('patterns')
             ->get()
-            ->map(function ($category) {
-                return [
-                    'name' => $category->name,
-                    'slug' => $category->slug,
-                    'icon' => $category->icon,
-                    'count' => $category->patterns_count,
-                ];
-            });
+            ->map(fn($category) => [
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'icon' => $category->icon,
+                'count' => $category->patterns_count,
+            ]);
 
-        // Fetch patterns with their associated categories
-        $patterns = Pattern::with('categories')
-            ->get()
+        // Step 4: Fetch patterns with categories (common, just attach saved flag if logged in)
+        $patterns = Pattern::with('categories')->get()
             ->map(function ($pattern) use ($savedItems) {
                 return [
                     'id' => $pattern->id,
@@ -98,12 +107,14 @@ class PatternController extends Controller
                 ];
             });
 
-        // Return the response in the desired JSON format
+        // Step 5: Return response
         return response()->json([
             'categories' => $categories,
             'items' => $patterns
-        ])->header('Access-Control-Allow-Origin', 'http://frontis.local')
-            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        ])->withHeaders([
+            'Access-Control-Allow-Origin' => 'http://frontis.local',
+            'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
+        ]);
     }
 }
