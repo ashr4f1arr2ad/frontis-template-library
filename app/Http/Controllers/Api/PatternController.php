@@ -20,7 +20,9 @@ class PatternController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'nullable|email',
-            'license_key' => 'nullable|string|max:255'
+            'license_key' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'per_page' => 'nullable|integer|min:1|max:100'
         ]);
 
         if ($validator->fails()) {
@@ -79,9 +81,28 @@ class PatternController extends Controller
             ]);
 
         // Step 4: Fetch patterns with categories (common, just attach saved flag if logged in)
+        // $patterns = Pattern::with('categories')
+        //     ->get()
+        //     ->map(function ($pattern) use ($savedItems) {
+        //         return [
+        //             'id' => $pattern->id,
+        //             'title' => $pattern->title,
+        //             'slug' => $pattern->slug,
+        //             'description' => $pattern->description,
+        //             'is_premium' => $pattern->is_premium,
+        //             'image' => $pattern->image,
+        //             'tags' => $pattern->tags,
+        //             'pattern_json' => $pattern->pattern_json,
+        //             'categories' => $pattern->categories->pluck('name')->toArray(),
+        //             'saved' => in_array((int)$pattern->id, $savedItems),
+        //         ];
+        //     });
+
+        $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 2);
         $patterns = Pattern::with('categories')
-            ->get()
-            ->map(function ($pattern) use ($savedItems) {
+            ->paginate($perPage, ['*'], 'page', $page)
+            ->through(function ($pattern) use ($savedItems) {
                 return [
                     'id' => $pattern->id,
                     'title' => $pattern->title,
@@ -99,7 +120,15 @@ class PatternController extends Controller
         // Step 5: Return response
         return response()->json([
             'categories' => $categories,
-            'items' => $patterns
+            'items' => $patterns->items(),
+            'pagination' => [
+                'current_page' => $patterns->currentPage(),
+                'per_page' => $patterns->perPage(),
+                'total' => $patterns->total(),
+                'last_page' => $patterns->lastPage(),
+                'from' => $patterns->firstItem(),
+                'to' => $patterns->lastItem(),
+            ]
         ]);
     }
 }
