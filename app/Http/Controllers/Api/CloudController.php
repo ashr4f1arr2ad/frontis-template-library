@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Cloud;
 use App\Models\License;
 use App\Models\Pattern;
+use App\Models\Page;
+use App\Models\Site;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +20,8 @@ class CloudController extends Controller
     public function index(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'license_key' => 'required|string|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -29,53 +32,109 @@ class CloudController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $request->input('email'))->first();
-        if (!$user) {
+        $license = License::where('license_key', $request->license_key)->first();
+
+        if (!$license) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'No user associated with this email',
+                'message' => 'License not found',
             ], 404);
         }
 
-        // Fetch categories with the count of associated patterns
-        $categories = Category::withCount('patterns')
-        ->whereHas('patterns')
-        ->get()
-        ->map(function ($category) {
-            return [
-                'name' => $category->name,
-                'slug' => $category->slug,
-                'icon' => $category->icon,
-                'count' => $category->patterns_count,
-            ];
-        });
+        $user = $license->user;
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No user associated with this license',
+            ], 404);
+        }
 
-        // Fetch clouds and attach patterns by item_id
-        $clouds = Cloud::where('sub_user', $user->id)->get()->map(function ($cloud) {
-            $pattern = Pattern::with('categories')->find($cloud->item_id);
+        $sub_user = User::where('email', $request->email)->first();
+
+        $query = Cloud::where('user_id', $user->id);
+
+        if ($sub_user->id === $user->id) {
+            $query->whereNull('sub_user'); // Main user
+        } else {
+            $query->where(function ($q) use ($sub_user) {
+                $q->whereNull('sub_user') // main user items
+                  ->orWhere('sub_user', $sub_user->id); // sub-user items
+            });
+        }
+
+        // Fetch all clouds (patterns, sites, pages)
+        $clouds = $query->get()->map(function ($cloud) {
             $created = Carbon::parse($cloud->created_at);
-    
-            return [
-                'cloud_id' => $cloud->id,
-                'item_type' => $cloud->item_type,
-                'item_id'  => $cloud->item_id,
-                'id'          => $pattern->id,
-                'title'       => $pattern->title,
-                'slug'        => $pattern->slug,
-                'is_premium'  => $pattern->is_premium,
-                'image'       => $pattern->image,
-                'dateAndTime' => [
-                    'day'   => $created->format('j'),
-                    'month' => $created->format('F'),
-                    'year'  => $created->format('Y'),
-                    'time'  => $created->format('h:i A'),
-                ],
-            ];
-        });
+
+            switch ($cloud->item_type) {
+                case 'patterns':
+                    $item = Pattern::find($cloud->item_id);
+                    if (!$item) return null;
+                    return [
+                        'cloud_id'    => $cloud->id,
+                        'item_type'   => $cloud->item_type,
+                        'item_id'     => $cloud->item_id,
+                        'id'          => $item->id,
+                        'title'       => $item->title,
+                        'slug'        => $item->slug,
+                        'is_premium'  => $item->is_premium,
+                        'image'       => $item->image,
+                        'dateAndTime' => [
+                            'day'   => $created->format('j'),
+                            'month' => $created->format('F'),
+                            'year'  => $created->format('Y'),
+                            'time'  => $created->format('h:i A'),
+                        ],
+                    ];
+
+                case 'sites':
+                    $item = Site::find($cloud->item_id);
+                    if (!$item) return null;
+                    return [
+                        'cloud_id'    => $cloud->id,
+                        'item_type'   => $cloud->item_type,
+                        'item_id'     => $cloud->item_id,
+                        'id'          => $item->id,
+                        'title'       => $item->title,
+                        'slug'        => $item->slug,
+                        'is_premium'  => $item->is_premium,
+                        'image'       => $item->image,
+                        'dateAndTime' => [
+                            'day'   => $created->format('j'),
+                            'month' => $created->format('F'),
+                            'year'  => $created->format('Y'),
+                            'time'  => $created->format('h:i A'),
+                        ],
+                    ];
+
+                case 'pages':
+                    $item = Page::find($cloud->item_id);
+                    if (!$item) return null;
+                    return [
+                        'cloud_id'    => $cloud->id,
+                        'item_type'   => $cloud->item_type,
+                        'item_id'     => $cloud->item_id,
+                        'id'          => $item->id,
+                        'title'       => $item->title,
+                        'slug'        => $item->slug,
+                        'is_premium'  => $item->is_premium,
+                        'image'       => $item->image,
+                        'dateAndTime' => [
+                            'day'   => $created->format('j'),
+                            'month' => $created->format('F'),
+                            'year'  => $created->format('Y'),
+                            'time'  => $created->format('h:i A'),
+                        ],
+                    ];
+
+                default:
+                    return null;
+            }
+        })->filter();
 
         // Return the response in the desired JSON format
         return response()->json([
-            'categories' => $categories,
+            'categories' => [],
             'items' => $clouds
         ])->header('Access-Control-Allow-Origin', 'http://frontis.local')
             ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
@@ -170,5 +229,80 @@ class CloudController extends Controller
             'message' => 'Item saved successfully',
             'data' => $cloud,
         ], 201);
+    }
+
+    public function remove_item(Request $request): JsonResponse 
+    {
+        // Validate the incoming request
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'item_id' => 'required|string',
+            'item_type' => 'required|string',
+            'license_key' => 'required|string|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $license = License::where('license_key', $request->license_key)->first();
+
+        if (!$license) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'License not found',
+            ], 404);
+        }
+
+        $user = $license->user;
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No user associated with this license',
+            ], 404);
+        }
+
+        // Sub user (by email)
+        $sub_user = User::where('email', $request->email)->first();
+        if (!$sub_user) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'User with this email not found',
+            ], 404);
+        }
+
+        // Build delete query
+        $query = Cloud::where('user_id', $user->id)
+            ->where('item_type', $request->item_type)
+            ->where('item_id', intval($request->item_id));
+
+        if ($sub_user->id === $user->id) {
+            // Main user → only his own saved item
+            $query->whereNull('sub_user');
+        } else {
+            // Sub user → only his own saved item
+            $query->where('sub_user', $sub_user->id);
+        }
+
+        $cloudItem = $query->first();
+
+        if (!$cloudItem) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Item not found or not owned by this user',
+            ], 404);
+        }
+
+        // Delete the item
+        $cloudItem->delete();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Item removed successfully',
+        ]);
     }
 }

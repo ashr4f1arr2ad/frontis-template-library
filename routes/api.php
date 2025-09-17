@@ -33,6 +33,7 @@ Route::middleware('secret.key')->group(function () {
 
     // Save item to cloud
     Route::post('/cloud/saved-item', [CloudController::class, 'saved_item']);
+    Route::post('/cloud/remove-item', [CloudController::class, 'remove_item']);
 
     // Active license key
     Route::post('/active/license', [ActiveLicense::class, 'activate']);

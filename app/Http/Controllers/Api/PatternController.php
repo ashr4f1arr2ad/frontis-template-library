@@ -18,9 +18,9 @@ class PatternController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        // Step 1: Validate "logged_in"
         $validator = Validator::make($request->all(), [
-            'logged_in' => 'required|string'
+            'email' => 'nullable|email',
+            'license_key' => 'nullable|string|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -34,20 +34,7 @@ class PatternController extends Controller
         $savedItems = [];
 
         // Step 2: If user is logged in, validate license & email
-        if ($request->input('logged_in') === 'true') {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email',
-                'license_key' => 'required|string|max:255'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors(),
-                ], 422);
-            }
-
+        if ($request->input('email')) {
             $license = License::where('license_key', $request->license_key)->first();
 
             if (!$license) {
@@ -68,7 +55,7 @@ class PatternController extends Controller
             $sub_user = User::where('email', $request->email)->first();
 
             if ($sub_user) {
-                $query = Cloud::where('user_id', $user->id);
+                $query = Cloud::where('user_id', $user->id)->where('item_type', 'patterns');
 
                 if ($sub_user->id === $user->id) {
                     $query->whereNull('sub_user'); // Main user
@@ -92,7 +79,8 @@ class PatternController extends Controller
             ]);
 
         // Step 4: Fetch patterns with categories (common, just attach saved flag if logged in)
-        $patterns = Pattern::with('categories')->get()
+        $patterns = Pattern::with('categories')
+            ->get()
             ->map(function ($pattern) use ($savedItems) {
                 return [
                     'id' => $pattern->id,
@@ -102,6 +90,7 @@ class PatternController extends Controller
                     'is_premium' => $pattern->is_premium,
                     'image' => $pattern->image,
                     'tags' => $pattern->tags,
+                    'pattern_json' => $pattern->pattern_json,
                     'categories' => $pattern->categories->pluck('name')->toArray(),
                     'saved' => in_array((int)$pattern->id, $savedItems),
                 ];
@@ -111,10 +100,6 @@ class PatternController extends Controller
         return response()->json([
             'categories' => $categories,
             'items' => $patterns
-        ])->withHeaders([
-            'Access-Control-Allow-Origin' => 'http://frontis.local',
-            'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
         ]);
     }
 }
