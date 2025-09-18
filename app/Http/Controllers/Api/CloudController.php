@@ -21,7 +21,11 @@ class CloudController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'license_key' => 'required|string|max:255'
+            'license_key' => 'required|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'per_page' => 'nullable|integer|min:1|max:100',
+            'type' => 'nullable|string',
+            'search' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -62,83 +66,67 @@ class CloudController extends Controller
             });
         }
 
-        // Fetch all clouds (patterns, sites, pages)
-        $clouds = $query->get()->map(function ($cloud) {
-            $created = Carbon::parse($cloud->created_at);
+        $page = $request->input('page', 1); // default page = 1
+        $perPage = $request->input('per_page', 12);
 
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('item_type', 'like', '%' . $search . '%');
+        }
+
+        $clouds = $query->paginate($perPage, ['*'], 'page', $page);
+        $clouds->getCollection()->transform(function ($cloud) {
+            $created = Carbon::parse($cloud->created_at);
+        
             switch ($cloud->item_type) {
                 case 'patterns':
                     $item = Pattern::find($cloud->item_id);
-                    if (!$item) return null;
-                    return [
-                        'cloud_id'    => $cloud->id,
-                        'item_type'   => $cloud->item_type,
-                        'item_id'     => $cloud->item_id,
-                        'id'          => $item->id,
-                        'title'       => $item->title,
-                        'slug'        => $item->slug,
-                        'is_premium'  => $item->is_premium,
-                        'image'       => $item->image,
-                        'dateAndTime' => [
-                            'day'   => $created->format('j'),
-                            'month' => $created->format('F'),
-                            'year'  => $created->format('Y'),
-                            'time'  => $created->format('h:i A'),
-                        ],
-                    ];
-
+                    break;
                 case 'sites':
                     $item = Site::find($cloud->item_id);
-                    if (!$item) return null;
-                    return [
-                        'cloud_id'    => $cloud->id,
-                        'item_type'   => $cloud->item_type,
-                        'item_id'     => $cloud->item_id,
-                        'id'          => $item->id,
-                        'title'       => $item->title,
-                        'slug'        => $item->slug,
-                        'is_premium'  => $item->is_premium,
-                        'image'       => $item->image,
-                        'dateAndTime' => [
-                            'day'   => $created->format('j'),
-                            'month' => $created->format('F'),
-                            'year'  => $created->format('Y'),
-                            'time'  => $created->format('h:i A'),
-                        ],
-                    ];
-
+                    break;
                 case 'pages':
                     $item = Page::find($cloud->item_id);
-                    if (!$item) return null;
-                    return [
-                        'cloud_id'    => $cloud->id,
-                        'item_type'   => $cloud->item_type,
-                        'item_id'     => $cloud->item_id,
-                        'id'          => $item->id,
-                        'title'       => $item->title,
-                        'slug'        => $item->slug,
-                        'is_premium'  => $item->is_premium,
-                        'image'       => $item->image,
-                        'dateAndTime' => [
-                            'day'   => $created->format('j'),
-                            'month' => $created->format('F'),
-                            'year'  => $created->format('Y'),
-                            'time'  => $created->format('h:i A'),
-                        ],
-                    ];
-
+                    break;
                 default:
-                    return null;
+                    $item = null;
             }
-        })->filter();
+        
+            if (!$item) return null;
+        
+            return [
+                'cloud_id'    => $cloud->id,
+                'item_type'   => $cloud->item_type,
+                'item_id'     => $cloud->item_id,
+                'id'          => $item->id,
+                'title'       => $item->title,
+                'slug'        => $item->slug,
+                'is_premium'  => $item->is_premium,
+                'image'       => $item->image,
+                'dateAndTime' => [
+                    'day'   => $created->format('j'),
+                    'month' => $created->format('F'),
+                    'year'  => $created->format('Y'),
+                    'time'  => $created->format('h:i A'),
+                ],
+            ];
+        });
+        
+        $clouds->setCollection($clouds->getCollection()->filter());
 
         // Return the response in the desired JSON format
         return response()->json([
             'categories' => [],
-            'items' => $clouds
-        ])->header('Access-Control-Allow-Origin', 'http://frontis.local')
-            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            'items' => $clouds->items(),
+            'pagination' => [
+                'current_page' => $clouds->currentPage(),
+                'per_page' => $clouds->perPage(),
+                'total' => $clouds->total(),
+                'last_page' => $clouds->lastPage(),
+                'from' => $clouds->firstItem(),
+                'to' => $clouds->lastItem(),
+            ]
+        ]);
     }
 
     /**

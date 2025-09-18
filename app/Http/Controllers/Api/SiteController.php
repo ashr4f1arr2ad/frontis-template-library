@@ -17,7 +17,13 @@ class SiteController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'nullable|email',
-            'license_key' => 'nullable|string|max:255'
+            'license_key' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'per_page' => 'nullable|integer|min:1|max:100',
+            'tag' => 'nullable|string',
+            'search' => 'nullable|string',
+            'category' => 'nullable|string',
+            'is_pro_template' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -77,10 +83,54 @@ class SiteController extends Controller
                 ];
             });
 
+        // Pagination setup
+        $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 12);
+
+        // Step 3: Build patterns query
+        $query = Site::with('categories');
+
+        // Step 4: Tag filter (single or multiple)
+        if ($request->filled('tag')) {
+            $tags = (array) $request->input('tag');
+            foreach ($tags as $tag) {
+                $query->whereJsonContains('tags', $tag);
+            }
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        if ($request->filled('category')) {
+            $filterCategories = (array) $request->input('category');
+    
+            $query->whereHas('categories', function ($q) use ($filterCategories) {
+                $slugs = array_filter($filterCategories, fn($v) => !is_numeric($v));
+                $ids   = array_filter($filterCategories, fn($v) => is_numeric($v));
+    
+                if ($slugs) {
+                    $q->whereIn('categories.slug', $slugs);
+                }
+    
+                if ($ids) {
+                    $q->orWhereIn('categories.id', $ids);
+                }
+            });
+        }
+
+        if ($request->filled('is_pro_template')) {
+            if ($request->is_pro_template === 'pro') {
+                $query->where('is_premium', '1');
+            } elseif ($request->is_pro_template === 'free') {
+                $query->where('is_premium', '0');
+            }
+        }
+
         // Fetch patterns with their associated categories
-        $sites = Site::with('categories')
-            ->get()
-            ->map(function ($site) use ($savedItems) {
+        $sites = $query->paginate($perPage, ['*'], 'page', $page)
+            ->through(function ($site) use ($savedItems) {
                 $typographies = collect($site->typographies)->mapWithKeys(function ($item) {
                     return [
                         $item['name'] => [
@@ -140,7 +190,15 @@ class SiteController extends Controller
         // Return the response in the desired JSON format
         return response()->json([
             'categories' => $categories,
-            'items' => $sites,
+            'items' => $sites->items(),
+            'pagination' => [
+                'current_page' => $sites->currentPage(),
+                'per_page' => $sites->perPage(),
+                'total' => $sites->total(),
+                'last_page' => $sites->lastPage(),
+                'from' => $sites->firstItem(),
+                'to' => $sites->lastItem(),
+            ]
         ]);
     }
 }
