@@ -114,9 +114,30 @@ class CloudController extends Controller
         
         $clouds->setCollection($clouds->getCollection()->filter());
 
+        $categories = [
+            [
+                "slug" => "my-cloud",
+                "name" => "My Cloud",
+                "icon" => "<svg xmlns='http://www.w3.org/2000/svg' wslugth='20' height='20' viewBox='0 0 20 20' fill='none'><path d='M3.125 5C3.125 3.96447 3.96447 3.125 5 3.125H6.875C7.91053 3.125 8.75 3.96447 8.75 5V6.875C8.75 7.91053 7.91053 8.75 6.875 8.75H5C3.96447 8.75 3.125 7.91053 3.125 6.875V5Z' stroke='#404655' stroke-wslugth='1.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M3.125 13.125C3.125 12.0895 3.96447 11.25 5 11.25H6.875C7.91053 11.25 8.75 12.0895 8.75 13.125V15C8.75 16.0355 7.91053 16.875 6.875 16.875H5C3.96447 16.875 3.125 16.0355 3.125 15V13.125Z' stroke='#404655' stroke-wslugth='1.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M11.25 5C11.25 3.96447 12.0895 3.125 13.125 3.125H15C16.0355 3.125 16.875 3.96447 16.875 5V6.875C16.875 7.91053 16.0355 8.75 15 8.75H13.125C12.0895 8.75 11.25 7.91053 11.25 6.875V5Z' stroke='#404655' stroke-wslugth='1.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M11.25 13.125C11.25 12.0895 12.0895 11.25 13.125 11.25H15C16.0355 11.25 16.875 12.0895 16.875 13.125V15C16.875 16.0355 16.0355 16.875 15 16.875H13.125C12.0895 16.875 11.25 16.0355 11.25 15V13.125Z' stroke='#404655' stroke-wslugth='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+                "count" => []
+            ],
+            [
+                "slug" => "my-downloads",
+                "name" => "My Downloads",
+                "icon" => "<svg xmlns='http://www.w3.org/2000/svg' wslugth='24' height='24' viewBox='0 0 24 24' fill='none'><path d='M3.09477 10C3.03217 10.457 2.99976 10.9245 2.99976 11.4C2.99976 16.7019 7.02919 21 11.9998 21C16.9703 21 20.9998 16.7019 20.9998 11.4C20.9998 10.9245 20.9673 10.457 20.9047 10' stroke='#404655' stroke-wslugth='1.25' stroke-linecap='round'/><path d='M11.9998 13V3M11.9998 13C11.2995 13 9.99129 11.0057 9.49976 10.5M11.9998 13C12.7 13 14.0082 11.0057 14.4998 10.5' stroke='#404655' stroke-wslugth='1.25' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+                "count" => []
+            ],
+            [
+                "slug" => "shared-with-me",
+                "name" => "Shared with me",
+                "icon" => "<svg xmlns='http://www.w3.org/2000/svg' wslugth='24' height='24' viewBox='0 0 24 24' fill='none'><path d='M20.5 5.5C20.5 7.15685 19.1569 8.5 17.5 8.5C15.8431 8.5 14.5 7.15685 14.5 5.5C14.5 3.84315 15.8431 2.5 17.5 2.5C19.1569 2.5 20.5 3.84315 20.5 5.5Z' stroke='#404655' stroke-wslugth='1.25'/><path d='M8.5 11.5C8.5 13.1569 7.15685 14.5 5.5 14.5C3.84315 14.5 2.5 13.1569 2.5 11.5C2.5 9.84315 3.84315 8.5 5.5 8.5C7.15685 8.5 8.5 9.84315 8.5 11.5Z' stroke='#404655' stroke-wslugth='1.25'/><path d='M21.5 18.5C21.5 20.1569 20.1569 21.5 18.5 21.5C16.8431 21.5 15.5 20.1569 15.5 18.5C15.5 16.8431 16.8431 15.5 18.5 15.5C20.1569 15.5 21.5 16.8431 21.5 18.5Z' stroke='#404655' stroke-wslugth='1.25'/><path d='M14.5348 4.58109C14.1554 4.52765 13.7677 4.5 13.3733 4.5C10.2974 4.5 7.62058 6.18227 6.24054 8.66317M19.7131 7.49453C20.8311 8.86497 21.5 10.6056 21.5 12.5C21.5 13.8758 21.1472 15.1705 20.5258 16.3012M15.8816 20.1117C15.0917 20.3638 14.2486 20.5 13.3733 20.5C9.58287 20.5 6.39853 17.9454 5.5 14.4898' stroke='#404655' stroke-wslugth='1.25'/></svg>",
+                "count" => []
+            ],
+        ];
+
         // Return the response in the desired JSON format
         return response()->json([
-            'categories' => [],
+            'categories' => $categories,
             'items' => $clouds->items(),
             'pagination' => [
                 'current_page' => $clouds->currentPage(),
