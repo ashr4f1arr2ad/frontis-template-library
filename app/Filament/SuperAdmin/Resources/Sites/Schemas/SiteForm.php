@@ -84,7 +84,7 @@ class SiteForm
                             ->required(),
                             TextInput::make('slug')
                             ->required(),
-                            TextInput::make('color')
+                            TextInput::make('gradient')
                             ->required(),
                         ])->columns(3)->columnSpanFull(),
                 Repeater::make('typographies')
