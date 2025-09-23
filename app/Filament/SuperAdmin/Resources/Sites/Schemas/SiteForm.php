@@ -62,6 +62,10 @@ class SiteForm
                     ->directory('sites')
                     ->label('Site Image')
                     ->uploadingMessage('Uploading image...')->columnSpanFull(),
+                TextInput::make('preview_url')
+                    ->url()
+                    ->required()
+                    ->label('Preview Url')->columnSpanFull(),
                 Repeater::make('dependencies')
                         ->schema([
                             TextInput::make('name')
@@ -199,8 +203,8 @@ class SiteForm
                         ])->columns(1)->columnSpanFull(),
                 Repeater::make('custom_typographies')
                         ->schema([
-                            TextInput::make('name')
-                            ->required(),
+                            TextInput::make('key')->required(),
+                            TextInput::make('name')->required(),
                             Grid::make([
                                 'default' => 1,
                                 'sm' => 2,
@@ -313,14 +317,13 @@ class SiteForm
                             ->required(),
                             // TextInput::make('slug')
                             // ->required(),
-                            Textarea::make('sites')
+                            Textarea::make('page')
                             ->required()
                             ->rows(8)
-                            ->label('Sites JSON')->columnSpanFull(),
+                            ->label('Page JSON')->columnSpanFull(),
                     ])->columns(1)->columnSpanFull(),
                 Toggle::make('is_premium')
-                    ->label('Premium')
-                    ->required(),
+                    ->label('Premium'),
             ]);
     }
 }

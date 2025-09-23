@@ -178,6 +178,7 @@ class SiteController extends Controller
                 $custom_typographies = collect($site->custom_typographies)
                     ->mapWithKeys(function ($item) {
                         $data = [
+                            'name' => $item['nmae'] ?? 'Custom Typography',
                             'fontFamily'       => $item['fontFamily'] ?? 'Default',
                             'fontWeight'       => $item['fontWeight'] ?? 'Default',
                             'fontStyle'        => $item['fontStyle'] ?? 'Default',
@@ -203,7 +204,7 @@ class SiteController extends Controller
                         }
 
                         return [
-                            $item['name'] => $data
+                            $item['key'] => $data
                         ];
                     });
 
@@ -215,12 +216,13 @@ class SiteController extends Controller
                     'tags' => $site->tags,
                     'description' => $site->description,
                     'image' => $site->image,
+                    'preview_url' => $site->preview_url,
                     'dependencies' => $site->dependencies,
-                    'colors' => $site->colors,
-                    'color_gradients' => $site->color_gradients,
-                    'typographies' => $typographies,
-                    'custom_typographies' => $custom_typographies,
-                    'pages' => $site->pages,
+                    // 'colors' => $site->colors,
+                    // 'color_gradients' => $site->color_gradients,
+                    // 'typographies' => $typographies,
+                    // 'custom_typographies' => $custom_typographies,
+                    // 'pages' => $site->pages,
                     'is_premium' => $site->is_premium,
                     'categories' => $site->categories->pluck('name')->toArray(),
                     'saved' => in_array((int)$site->id, $savedItems),
