@@ -131,41 +131,81 @@ class SiteController extends Controller
         // Fetch patterns with their associated categories
         $sites = $query->paginate($perPage, ['*'], 'page', $page)
             ->through(function ($site) use ($savedItems) {
-                $typographies = collect($site->typographies)->mapWithKeys(function ($item) {
-                    return [
-                        $item['name'] => [
-                            'fontFamily' => $item['fontFamily'] ?? 'Default',
-                            'fontWeight' => $item['fontWeight'] ?? 'Default',
-                            'fontStyle' => $item['fontStyle'] ?? 'Default',
-                            'textTransform' => $item['textTransform'] ?? 'Default',
-                            'textDecoration' => $item['textDecoration'] ?? 'Default',
-                            'fontSize' => $item['fontSize'] ?? [],
-                            'fontSizeUnit' => $item['fontSizeUnit'] ?? [],
-                            'lineHeight' => $item['lineHeight'] ?? [],
-                            'lineHeightUnits' => $item['lineHeightUnits'] ?? [],
-                            'letterSpacing' => $item['letterSpacing'] ?? [],
-                            'letterSpacingUnit' => $item['letterSpacingUnit'] ?? [],
-                        ]
-                    ];
-                });
+                $typographies = collect($site->typographies)
+                    ->reduce(function ($carry, $item) {
+                        $name = strtolower($item['name']);
 
-                $custom_typographies = collect($site->custom_typographies)->mapWithKeys(function ($item) {
-                    return [
-                        $item['name'] => [
-                            'fontFamily' => $item['fontFamily'] ?? 'Default',
-                            'fontWeight' => $item['fontWeight'] ?? 'Default',
-                            'fontStyle' => $item['fontStyle'] ?? 'Default',
-                            'textTransform' => $item['textTransform'] ?? 'Default',
-                            'textDecoration' => $item['textDecoration'] ?? 'Default',
-                            'fontSize' => $item['fontSize'] ?? [],
-                            'fontSizeUnit' => $item['fontSizeUnit'] ?? [],
-                            'lineHeight' => $item['lineHeight'] ?? [],
-                            'lineHeightUnits' => $item['lineHeightUnits'] ?? [],
-                            'letterSpacing' => $item['letterSpacing'] ?? [],
-                            'letterSpacingUnit' => $item['letterSpacingUnit'] ?? [],
-                        ]
-                    ];
-                });
+                        $data = [
+                            'fontFamily'       => $item['fontFamily'] ?? 'Default',
+                            'fontWeight'       => $item['fontWeight'] ?? 'Default',
+                            'fontStyle'        => $item['fontStyle'] ?? 'Default',
+                            'textTransform'    => $item['textTransform'] ?? 'Default',
+                            'textDecoration'   => $item['textDecoration'] ?? 'Default',
+                            'fontSize'         => $item['fontSize'] ?? [],
+                            'fontSizeUnit'     => $item['fontSizeUnit'] ?? [],
+                            'lineHeight'       => $item['lineHeight'] ?? [],
+                            'lineHeightUnits'  => $item['lineHeightUnits'] ?? [],
+                            'letterSpacing'    => $item['letterSpacing'] ?? [],
+                            'letterSpacingUnit'=> $item['letterSpacingUnit'] ?? [],
+                        ];
+
+                        // convert nulls in nested arrays to empty strings
+                        foreach (['fontSize','lineHeight','letterSpacing'] as $key) {
+                            if (isset($data[$key]) && is_array($data[$key])) {
+                                foreach ($data[$key] as $device => $value) {
+                                    if (is_null($value)) {
+                                        $data[$key][$device] = '';
+                                    }
+                                }
+                            }
+                        }
+
+                        // handle heading vs top-level
+                        if (in_array($name, ['all', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
+                            if (!isset($carry['heading'])) $carry['heading'] = [];
+                            $carry['heading'][$name] = isset($carry['heading'][$name])
+                                ? array_merge_recursive($carry['heading'][$name], $data)
+                                : $data;
+                        } else {
+                            $carry[$name] = isset($carry[$name])
+                                ? array_merge_recursive($carry[$name], $data)
+                                : $data;
+                        }
+
+                        return $carry;
+                    }, []);
+
+                $custom_typographies = collect($site->custom_typographies)
+                    ->mapWithKeys(function ($item) {
+                        $data = [
+                            'fontFamily'       => $item['fontFamily'] ?? 'Default',
+                            'fontWeight'       => $item['fontWeight'] ?? 'Default',
+                            'fontStyle'        => $item['fontStyle'] ?? 'Default',
+                            'textTransform'    => $item['textTransform'] ?? 'Default',
+                            'textDecoration'   => $item['textDecoration'] ?? 'Default',
+                            'fontSize'         => $item['fontSize'] ?? [],
+                            'fontSizeUnit'     => $item['fontSizeUnit'] ?? [],
+                            'lineHeight'       => $item['lineHeight'] ?? [],
+                            'lineHeightUnits'  => $item['lineHeightUnits'] ?? [],
+                            'letterSpacing'    => $item['letterSpacing'] ?? [],
+                            'letterSpacingUnit'=> $item['letterSpacingUnit'] ?? [],
+                        ];
+
+                        // Only convert null values to empty strings for fontSize, lineHeight, letterSpacing
+                        foreach (['fontSize', 'lineHeight', 'letterSpacing'] as $key) {
+                            if (isset($data[$key]) && is_array($data[$key])) {
+                                foreach ($data[$key] as $device => $value) {
+                                    if (is_null($value)) {
+                                        $data[$key][$device] = '';
+                                    }
+                                }
+                            }
+                        }
+
+                        return [
+                            $item['name'] => $data
+                        ];
+                    });
 
                 return [
                     'id' => $site->id,
