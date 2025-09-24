@@ -83,6 +83,20 @@ class SiteController extends Controller
                 ];
             });
 
+        $tags = Site::select('tags')
+            ->whereNotNull('tags')
+            ->get()
+            ->pluck('tags')
+            ->flatten()
+            ->map(fn($tag) => trim($tag))
+            ->filter()
+            ->countBy()
+            ->map(fn($count, $tag) => [
+                'name' => $tag,
+                'count' => $count,
+            ])
+            ->values();
+
         // Pagination setup
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 12);
@@ -233,6 +247,7 @@ class SiteController extends Controller
         // Return the response in the desired JSON format
         return response()->json([
             'categories' => $categories,
+            'tags' => $tags,
             'items' => $sites->items(),
             'pagination' => [
                 'current_page' => $sites->currentPage(),

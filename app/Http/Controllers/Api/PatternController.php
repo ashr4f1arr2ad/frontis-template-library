@@ -84,6 +84,20 @@ class PatternController extends Controller
                 'count' => $category->patterns_count,
             ]);
 
+        $tags = Pattern::select('tags')
+            ->whereNotNull('tags')
+            ->get()
+            ->pluck('tags')
+            ->flatten()
+            ->map(fn($tag) => trim($tag))
+            ->filter()
+            ->countBy()
+            ->map(fn($count, $tag) => [
+                'name' => $tag,
+                'count' => $count,
+            ])
+            ->values();
+
         // Pagination setup
         $page = $request->input('page', 1);
         $perPage = $request->input('per_page', 12);
@@ -149,6 +163,7 @@ class PatternController extends Controller
         // Step 5: Return response
         return response()->json([
             'categories' => $categories,
+            'tags' => $tags,
             'items' => $patterns->items(),
             'pagination' => [
                 'current_page' => $patterns->currentPage(),
