@@ -142,7 +142,7 @@ class PageController extends Controller
                     'image' => $page->image,
                     'dependencies' => $page->dependencies,
                     'is_premium' => $page->is_premium,
-                    'page_json' => $page->page_json,
+                    // 'page_json' => $page->page_json,
                     'categories' => $page->categories->pluck('name')->toArray(),
                     'saved' => in_array((int)$page->id, $savedItems),
                 ];

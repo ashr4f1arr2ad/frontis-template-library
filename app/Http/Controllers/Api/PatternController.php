@@ -140,7 +140,7 @@ class PatternController extends Controller
                     'is_premium' => $pattern->is_premium,
                     'image' => $pattern->image,
                     'tags' => $pattern->tags,
-                    'pattern_json' => $pattern->pattern_json,
+                    // 'pattern_json' => $pattern->pattern_json,
                     'categories' => $pattern->categories->pluck('name')->toArray(),
                     'saved' => in_array((int)$pattern->id, $savedItems),
                 ];
