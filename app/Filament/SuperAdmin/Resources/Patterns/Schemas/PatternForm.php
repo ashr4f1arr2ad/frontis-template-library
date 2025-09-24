@@ -47,8 +47,7 @@ class PatternForm
                         ->label('Pattern Image')
                         ->uploadingMessage('Uploading image...'),
                     Toggle::make('is_premium')
-                        ->label('Premium')
-                        ->required(),
+                        ->label('Premium'),
                     MarkdownEditor::make('description'),
                     Textarea::make('pattern_json')
                         ->required()

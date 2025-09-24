@@ -58,8 +58,7 @@ class PagesForm
                             ->unique(table: Category::class),
                     ]),
                 Toggle::make('is_premium')
-                    ->label('Premium')
-                    ->required()->columns(3)->columnSpanFull(),
+                    ->label('Premium')->columns(3)->columnSpanFull(),
                 MarkdownEditor::make('description')->columnSpanFull(),
                 FileUpload::make('image')
                     ->required()

@@ -136,6 +136,7 @@ class SiteController extends Controller
                         $name = strtolower($item['name']);
 
                         $data = [
+                            'name' => $name ?? 'Typography',
                             'fontFamily'       => $item['fontFamily'] ?? 'Default',
                             'fontWeight'       => $item['fontWeight'] ?? 'Default',
                             'fontStyle'        => $item['fontStyle'] ?? 'Default',
@@ -150,7 +151,7 @@ class SiteController extends Controller
                         ];
 
                         // convert nulls in nested arrays to empty strings
-                        foreach (['fontSize','lineHeight','letterSpacing'] as $key) {
+                        foreach (['fontSize','fontSizeUnit','lineHeight','lineHeightUnits','letterSpacing','letterSpacingUnit'] as $key) {
                             if (isset($data[$key]) && is_array($data[$key])) {
                                 foreach ($data[$key] as $device => $value) {
                                     if (is_null($value)) {
@@ -222,7 +223,7 @@ class SiteController extends Controller
                     // 'color_gradients' => $site->color_gradients,
                     // 'typographies' => $typographies,
                     // 'custom_typographies' => $custom_typographies,
-                    // 'pages' => $site->pages,
+                    'pages' => $site->pages,
                     'is_premium' => $site->is_premium,
                     'categories' => $site->categories->pluck('name')->toArray(),
                     'saved' => in_array((int)$site->id, $savedItems),
