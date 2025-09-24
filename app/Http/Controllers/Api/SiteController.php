@@ -223,7 +223,7 @@ class SiteController extends Controller
                     // 'color_gradients' => $site->color_gradients,
                     // 'typographies' => $typographies,
                     // 'custom_typographies' => $custom_typographies,
-                    'pages' => $site->pages,
+                    // 'pages' => $site->pages,
                     'is_premium' => $site->is_premium,
                     'categories' => $site->categories->pluck('name')->toArray(),
                     'saved' => in_array((int)$site->id, $savedItems),
