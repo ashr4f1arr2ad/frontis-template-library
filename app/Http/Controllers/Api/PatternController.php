@@ -40,7 +40,7 @@ class PatternController extends Controller
         $savedItems = [];
 
         // Step 2: If user is logged in, validate license & email
-        if ($request->input('email')) {
+        if (!empty($request->input('email')) && !empty($request->input('license_key'))) {
             $license = License::where('license_key', $request->license_key)->first();
 
             if (!$license) {
