@@ -19,7 +19,6 @@ return new class extends Migration
             $table->json('tags');
             $table->text('description');
             $table->string('image')->nullable();
-            $table->string('preview_url')->nullable();
             $table->json('dependencies');
             $table->json('colors');
             $table->json('color_gradients');

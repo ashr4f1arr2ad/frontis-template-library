@@ -107,9 +107,9 @@ class SiteForm
                                         ->label('Font Family'),
                                 Select::make('fontWeight')
                                         ->options([
-                                            'Default'=>'Default','100'=>'Thin','200'=>'Extra Light','300'=>'Light',
-                                            '400'=>'Normal','500'=>'Medium','600'=>'Semi Bold','700'=>'Bold',
-                                            '800'=>'Extra Bold','900'=>'Black'
+                                            'Default'=>'Default','100'=>'100','200'=>'200','300'=>'300',
+                                            '400'=>'400','500'=>'500','600'=>'600','700'=>'700',
+                                            '800'=>'800','900'=>'900'
                                         ])
                                         ->default('Default'),
                                 Select::make('fontStyle')
@@ -217,9 +217,9 @@ class SiteForm
                                         ->label('Font Family'),
                                 Select::make('fontWeight')
                                         ->options([
-                                            'Default'=>'Default','100'=>'Thin','200'=>'Extra Light','300'=>'Light',
-                                            '400'=>'Normal','500'=>'Medium','600'=>'Semi Bold','700'=>'Bold',
-                                            '800'=>'Extra Bold','900'=>'Black'
+                                            'Default'=>'Default','100'=>'100','200'=>'200','300'=>'300',
+                                            '400'=>'400','500'=>'500','600'=>'600','700'=>'700',
+                                            '800'=>'800','900'=>'900'
                                         ])
                                         ->default('Default'),
                                 Select::make('fontStyle')
