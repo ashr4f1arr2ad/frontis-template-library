@@ -195,12 +195,12 @@ class AuthController extends Controller
             ], 422);
         }
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid credentials'
-            ], 401);
-        }
+        // if (!Auth::attempt($request->only('email', 'password'))) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Invalid credentials'
+        //     ], 401);
+        // }
 
         $user = User::where('email', $request->email)->first();
 
