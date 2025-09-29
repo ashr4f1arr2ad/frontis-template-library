@@ -64,7 +64,7 @@ class PatternController extends Controller
                 $query = Cloud::where('user_id', $user->id)->where('item_type', 'patterns');
 
                 if ($sub_user->id === $user->id) {
-                    $query->whereNull('sub_user'); // Main user
+                    $query->whereNull('sub_user')->orWhere('sub_user', $user->id); // Main user
                 } else {
                     $query->where('sub_user', $sub_user->id); // Sub-user
                 }
