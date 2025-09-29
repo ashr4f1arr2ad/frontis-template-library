@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Subscription;
 use App\Models\License;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use OpenApi\Attributes as OA;
 use Carbon\Carbon;
 
@@ -116,7 +117,7 @@ class SubscriptionController extends Controller
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
-                'password' => $validated['password'],
+                'password' => Hash::make($validated['password']),
             ]);
         }
 
