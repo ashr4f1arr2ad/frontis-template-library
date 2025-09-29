@@ -193,7 +193,7 @@ class SiteController extends Controller
                 $custom_typographies = collect($site->custom_typographies)
                     ->mapWithKeys(function ($item) {
                         $data = [
-                            'name' => $item['nmae'] ?? 'Custom Typography',
+                            'name' => $item['name'] ?? 'Custom Typography',
                             'fontFamily'       => $item['fontFamily'] ?? 'Default',
                             'fontWeight'       => $item['fontWeight'] ?? 'Default',
                             'fontStyle'        => $item['fontStyle'] ?? 'Default',
