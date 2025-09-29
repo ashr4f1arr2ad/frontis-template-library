@@ -75,9 +75,64 @@ class CloudController extends Controller
             $query->where('item_type', 'like', '%' . $type . '%');
         }
 
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where('item_type', 'like', '%' . $search . '%');
+        // filter by type (optional)
+        if ($request->filled('type')) {
+            $type = $request->input('type');
+            $query->where('item_type', $type);
+
+            if ($request->filled('search')) {
+                $search = $request->input('search');
+
+                if ($type === 'patterns') {
+                    $query->whereHas('pattern', function ($q) use ($search) {
+                        $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%");
+                    });
+                }
+
+                if ($type === 'sites') {
+                    $query->whereHas('site', function ($q) use ($search) {
+                        $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%");
+                    });
+                }
+
+                if ($type === 'pages') {
+                    $query->whereHas('page', function ($q) use ($search) {
+                        $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%");
+                    });
+                }
+            }
+        } else {
+            // No type provided → return whichever type matches search
+            if ($request->filled('search')) {
+                $search = $request->input('search');
+
+                $query->where(function ($q) use ($search) {
+                    $q->where(function ($q2) use ($search) {
+                        $q2->where('item_type', 'patterns')
+                        ->whereHas('pattern', function ($q3) use ($search) {
+                            $q3->where('title', 'like', "%{$search}%")
+                                ->orWhere('slug', 'like', "%{$search}%");
+                        });
+                    })
+                    ->orWhere(function ($q2) use ($search) {
+                        $q2->where('item_type', 'sites')
+                        ->whereHas('site', function ($q3) use ($search) {
+                            $q3->where('title', 'like', "%{$search}%")
+                                ->orWhere('slug', 'like', "%{$search}%");
+                        });
+                    })
+                    ->orWhere(function ($q2) use ($search) {
+                        $q2->where('item_type', 'pages')
+                        ->whereHas('page', function ($q3) use ($search) {
+                            $q3->where('title', 'like', "%{$search}%")
+                                ->orWhere('slug', 'like', "%{$search}%");
+                        });
+                    });
+                });
+            }
         }
 
         $clouds = $query->paginate($perPage, ['*'], 'page', $page);
