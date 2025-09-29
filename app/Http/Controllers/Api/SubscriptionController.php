@@ -97,12 +97,15 @@ class SubscriptionController extends Controller
     {
         // Validate the request
         $validated = $request->validate([
-            'email' => 'required|string|email|max:255', // Removed unique constraint
+            'name' => 'nullable|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users', // Removed unique constraint
+            'password' => 'nullable|string|min:8',
             'title' => 'nullable|string|max:255',
             'type' => 'nullable|string',
             'license_key' => 'nullable|string',
             'total_users' => 'required|integer|min:1',
             'expire_date' => 'required|string|date',
+            // 'device_name' => 'required|string'
         ]);
 
 
@@ -110,10 +113,11 @@ class SubscriptionController extends Controller
         $user = User::where('email', $validated['email'])->first();
 
         if (!$user) {
-            return response()->json([
-                'status' => false,
-                'message' => 'User not found',
-            ], 404);
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+            ]);
         }
 
         $newSubscription = Subscription::create([
