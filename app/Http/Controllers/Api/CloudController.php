@@ -58,7 +58,8 @@ class CloudController extends Controller
         $query = Cloud::where('user_id', $user->id);
 
         if ($sub_user->id === $user->id) {
-            $query->whereNull('sub_user'); // Main user
+            $query->whereNull('sub_user')
+                ->orWhere('sub_user', $user->id); // Main user
         } else {
             $query->where(function ($q) use ($sub_user) {
                 $q->whereNull('sub_user') // main user items
