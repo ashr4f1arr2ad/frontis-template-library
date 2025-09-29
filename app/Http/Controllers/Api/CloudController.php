@@ -70,6 +70,11 @@ class CloudController extends Controller
         $page = $request->input('page', 1); // default page = 1
         $perPage = $request->input('per_page', 12);
 
+        if ($request->filled('type')) {
+            $type = $request->input('type');
+            $query->where('item_type', 'like', '%' . $type . '%');
+        }
+
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where('item_type', 'like', '%' . $search . '%');
