@@ -37,10 +37,17 @@ class PatternController extends Controller
             ], 422);
         }
 
-        $savedItems = [];
+        $license = null;
+        $licenseValid = false;
+    
+        if ($request->filled('license_key')) {
+            $license = License::where('license_key', $request->license_key)->first();
+            $licenseValid = $license ? true : false;
+        }
 
+        $savedItems = [];
         // Step 2: If user is logged in, validate license & email
-        if (!empty($request->input('email')) && !empty($request->input('license_key'))) {
+        if (!empty($request->input('email')) && $licenseValid) {
             $license = License::where('license_key', $request->license_key)->first();
 
             if (!$license) {
