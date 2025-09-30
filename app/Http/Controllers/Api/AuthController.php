@@ -204,6 +204,13 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        if ($user->password !== $request->password) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid credentials'
+            ], 401);
+        }
+
         $accessToken = $user->createToken(
             $request->device_name,
             ['*'],
