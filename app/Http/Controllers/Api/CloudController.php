@@ -164,7 +164,7 @@ class CloudController extends Controller
                 'slug'        => $item->slug,
                 'is_premium'  => $item->is_premium,
                 'image'       => $item->image,
-                'colors' => $item->color,
+                'colors' => $item->colors,
                 'color_gradients' => $item->color_gradients,
                 'content' => $item->content,
                 'custom_typographies' => $item->custom_typographies,
