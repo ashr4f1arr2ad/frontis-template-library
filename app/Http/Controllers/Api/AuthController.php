@@ -185,6 +185,7 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|string',
             'device_name' => 'required|string',
+            'hashed_password' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -195,12 +196,14 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // if (!Auth::attempt($request->only('email', 'password'))) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Invalid credentials'
-        //     ], 401);
-        // }
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            if ($user->password !== $request->hashed_password) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid credentials'
+                ], 401);
+            }
+        }
 
         $user = User::where('email', $request->email)->first();
 
