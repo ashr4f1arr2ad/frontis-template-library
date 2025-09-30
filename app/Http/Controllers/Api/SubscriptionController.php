@@ -117,7 +117,7 @@ class SubscriptionController extends Controller
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
-                'password' => $validated['password'],
+                'password' => $request->password,
             ]);
         }
 
