@@ -196,6 +196,8 @@ class AuthController extends Controller
             ], 422);
         }
 
+        $user = User::where('email', $request->email)->first();
+
         if (!Auth::attempt($request->only('email', 'password'))) {
             if ($user->password !== $request->hashed_password) {
                 return response()->json([
@@ -204,8 +206,6 @@ class AuthController extends Controller
                 ], 401);
             }
         }
-
-        $user = User::where('email', $request->email)->first();
 
         if ($user->password !== $request->password) {
             return response()->json([
