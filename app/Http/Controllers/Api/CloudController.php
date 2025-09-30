@@ -352,10 +352,10 @@ class CloudController extends Controller
 
         if ($sub_user->id === $user->id) {
             // Main user → only his own saved item
-            $query->whereNull('sub_user');
+            $query->whereNull('sub_user')->orWhere('sub_user', $user->id);
         } else {
             // Sub user → only his own saved item
-            $query->where('sub_user', $sub_user->id);
+            $query->where('sub_user', $sub_user->id)->orWhere('sub_user', $sub_user->id);
         }
 
         $cloudItem = $query->first();
