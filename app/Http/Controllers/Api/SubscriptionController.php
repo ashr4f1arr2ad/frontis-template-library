@@ -119,9 +119,6 @@ class SubscriptionController extends Controller
                 'email' => $validated['email'],
                 'password' => $request->password,
             ]);
-
-            $user->password = $request->password;
-            $user->save();
         }
 
         $newSubscription = Subscription::create([
