@@ -198,8 +198,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-        } elseif ($user->password === $request->hashed_password) {
+        if ($user->password === $request->hashed_password || Auth::attempt($request->only('email', 'password'))) {
         } else {
             return response()->json([
                 'status' => false,
