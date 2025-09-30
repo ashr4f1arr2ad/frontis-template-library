@@ -198,13 +198,16 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            if ($user->password !== $request->hashed_password) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Invalid credentials'
-                ], 401);
-            }
+        if (Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid credentials'
+            ], 401);
+        } elseif ($user->password !== $request->hashed_password) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid credentials'
+            ], 401);
         }
 
         $accessToken = $user->createToken(
