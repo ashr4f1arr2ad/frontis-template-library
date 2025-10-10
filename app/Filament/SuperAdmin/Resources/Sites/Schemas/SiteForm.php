@@ -74,249 +74,275 @@ class SiteForm
                             ->required(),
                             TextInput::make('version')->required()
                         ])->columns(3)->columnSpanFull(),
-                Repeater::make('colors')
+                // Repeater::make('colors')
+                //         ->schema([
+                //             TextInput::make('name')
+                //             ->required(),
+                //             TextInput::make('slug')
+                //             ->required(),
+                //             ColorPicker::make('color')->required()
+                //         ])->columns(3)->columnSpanFull(),
+                // Repeater::make('color_gradients')
+                //         ->schema([
+                //             TextInput::make('name')
+                //             ->required(),
+                //             TextInput::make('slug')
+                //             ->required(),
+                //             TextInput::make('gradient')
+                //             ->required(),
+                //         ])->columns(3)->columnSpanFull(),
+                // Repeater::make('typographies')
+                //         ->schema([
+                //             TextInput::make('name')
+                //             ->required(),
+                //             Grid::make([
+                //                 'default' => 1,
+                //                 'sm' => 2,
+                //                 'md' => 3,
+                //                 'lg' => 4,
+                //                 'xl' => 3,
+                //             ])
+                //             ->schema([
+                //                 TextInput::make('fontFamily')
+                //                         ->label('Font Family'),
+                //                 Select::make('fontWeight')
+                //                         ->options([
+                //                             'Default'=>'Default','100'=>'100','200'=>'200','300'=>'300',
+                //                             '400'=>'400','500'=>'500','600'=>'600','700'=>'700',
+                //                             '800'=>'800','900'=>'900'
+                //                         ])
+                //                         ->default('Default'),
+                //                 Select::make('fontStyle')
+                //                         ->options(['Default'=>'Default','normal'=>'Normal','italic'=>'Italic','oblique'=>'Oblique'])
+                //                         ->default('Default'),
+                //                 Select::make('textTransform')
+                //                         ->options(['Default'=>'Default','none'=>'None','capitalize'=>'Capitalize','uppercase'=>'Uppercase','lowercase'=>'Lowercase'])
+                //                         ->default('Default'),
+                //                 Select::make('textDecoration')
+                //                         ->options(['Default'=>'Default','none'=>'None','underline'=>'Underline','overline'=>'Overline','line-through'=>'Line Through'])
+                //                         ->default('Default'),
+                //             ]),
+                //             Fieldset::make('Font Size')
+                //                     ->columns([
+                //                         'default' => 1,
+                //                         'md' => 2,
+                //                         'xl' => 3,
+                //                     ])
+                //                     ->schema([
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('fontSize.Desktop')->label('Desktop')->numeric(),
+                //                                     Select::make('fontSizeUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('fontSize.Tablet')->label('Tablet')->numeric(),
+                //                                     Select::make('fontSizeUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('fontSize.Mobile')->label('Mobile')->numeric(),
+                //                                     Select::make('fontSizeUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                     ]),
+                //                     Fieldset::make('Line Height')
+                //                     ->columns([
+                //                         'default' => 1,
+                //                         'md' => 2,
+                //                         'xl' => 3,
+                //                     ])
+                //                     ->schema([
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('lineHeight.Desktop')->label('Desktop')->numeric(),
+                //                                     Select::make('lineHeightUnits.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('lineHeight.Tablet')->label('Tablet')->numeric(),
+                //                                     Select::make('lineHeightUnits.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('lineHeight.Mobile')->label('Mobile')->numeric(),
+                //                                     Select::make('lineHeightUnits.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                     ]),
+                //                     Fieldset::make('Letter Spacing')
+                //                     ->columns([
+                //                         'default' => 1,
+                //                         'md' => 2,
+                //                         'xl' => 3,
+                //                     ])
+                //                     ->schema([
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('letterSpacing.Desktop')->label('Desktop')->numeric(),
+                //                                     Select::make('letterSpacingUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('letterSpacing.Tablet')->label('Tablet')->numeric(),
+                //                                     Select::make('letterSpacingUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('letterSpacing.Mobile')->label('Mobile')->numeric(),
+                //                                     Select::make('letterSpacingUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                     ]),
+                //         ])->columns(1)->columnSpanFull(),
+                // Repeater::make('custom_typographies')
+                //         ->schema([
+                //             TextInput::make('key')->required(),
+                //             TextInput::make('name')->required(),
+                //             Grid::make([
+                //                 'default' => 1,
+                //                 'sm' => 2,
+                //                 'md' => 3,
+                //                 'lg' => 4,
+                //                 'xl' => 3,
+                //             ])
+                //             ->schema([
+                //                 TextInput::make('fontFamily')
+                //                         ->label('Font Family'),
+                //                 Select::make('fontWeight')
+                //                         ->options([
+                //                             'Default'=>'Default','100'=>'100','200'=>'200','300'=>'300',
+                //                             '400'=>'400','500'=>'500','600'=>'600','700'=>'700',
+                //                             '800'=>'800','900'=>'900'
+                //                         ])
+                //                         ->default('Default'),
+                //                 Select::make('fontStyle')
+                //                         ->options(['Default'=>'Default','normal'=>'Normal','italic'=>'Italic','oblique'=>'Oblique'])
+                //                         ->default('Default'),
+                //                 Select::make('textTransform')
+                //                         ->options(['Default'=>'Default','none'=>'None','capitalize'=>'Capitalize','uppercase'=>'Uppercase','lowercase'=>'Lowercase'])
+                //                         ->default('Default'),
+                //                 Select::make('textDecoration')
+                //                         ->options(['Default'=>'Default','none'=>'None','underline'=>'Underline','overline'=>'Overline','line-through'=>'Line Through'])
+                //                         ->default('Default'),
+                //             ]),
+                //             Fieldset::make('Font Size')
+                //                     ->columns([
+                //                         'default' => 1,
+                //                         'md' => 2,
+                //                         'xl' => 3,
+                //                     ])
+                //                     ->schema([
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('fontSize.Desktop')->label('Desktop')->numeric(),
+                //                                     Select::make('fontSizeUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('fontSize.Tablet')->label('Tablet')->numeric(),
+                //                                     Select::make('fontSizeUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('fontSize.Mobile')->label('Mobile')->numeric(),
+                //                                     Select::make('fontSizeUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                     ]),
+                //             Fieldset::make('Line Height')
+                //                     ->columns([
+                //                         'default' => 1,
+                //                         'md' => 2,
+                //                         'xl' => 3,
+                //                     ])
+                //                     ->schema([
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('lineHeight.Desktop')->label('Desktop')->numeric(),
+                //                                     Select::make('lineHeightUnits.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('lineHeight.Tablet')->label('Tablet')->numeric(),
+                //                                     Select::make('lineHeightUnits.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('lineHeight.Mobile')->label('Mobile')->numeric(),
+                //                                     Select::make('lineHeightUnits.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                     ]),
+                //             Fieldset::make('Letter Spacing')
+                //                     ->columns([
+                //                         'default' => 1,
+                //                         'md' => 2,
+                //                         'xl' => 3,
+                //                     ])
+                //                     ->schema([
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('letterSpacing.Desktop')->label('Desktop')->numeric(),
+                //                                     Select::make('letterSpacingUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('letterSpacing.Tablet')->label('Tablet')->numeric(),
+                //                                     Select::make('letterSpacingUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                         Section::make()
+                //                                 ->schema([
+                //                                     TextInput::make('letterSpacing.Mobile')->label('Mobile')->numeric(),
+                //                                     Select::make('letterSpacingUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
+                //                                 ])
+                //                                 ->columns(2),
+                //                     ]),
+                //         ])->columns(1)->columnSpanFull(),
+                Section::make()
                         ->schema([
-                            TextInput::make('name')
-                            ->required(),
-                            TextInput::make('slug')
-                            ->required(),
-                            ColorPicker::make('color')->required()
-                        ])->columns(3)->columnSpanFull(),
-                Repeater::make('color_gradients')
-                        ->schema([
-                            TextInput::make('name')
-                            ->required(),
-                            TextInput::make('slug')
-                            ->required(),
-                            TextInput::make('gradient')
-                            ->required(),
-                        ])->columns(3)->columnSpanFull(),
-                Repeater::make('typographies')
-                        ->schema([
-                            TextInput::make('name')
-                            ->required(),
-                            Grid::make([
-                                'default' => 1,
-                                'sm' => 2,
-                                'md' => 3,
-                                'lg' => 4,
-                                'xl' => 3,
-                            ])
-                            ->schema([
-                                TextInput::make('fontFamily')
-                                        ->label('Font Family'),
-                                Select::make('fontWeight')
-                                        ->options([
-                                            'Default'=>'Default','100'=>'100','200'=>'200','300'=>'300',
-                                            '400'=>'400','500'=>'500','600'=>'600','700'=>'700',
-                                            '800'=>'800','900'=>'900'
-                                        ])
-                                        ->default('Default'),
-                                Select::make('fontStyle')
-                                        ->options(['Default'=>'Default','normal'=>'Normal','italic'=>'Italic','oblique'=>'Oblique'])
-                                        ->default('Default'),
-                                Select::make('textTransform')
-                                        ->options(['Default'=>'Default','none'=>'None','capitalize'=>'Capitalize','uppercase'=>'Uppercase','lowercase'=>'Lowercase'])
-                                        ->default('Default'),
-                                Select::make('textDecoration')
-                                        ->options(['Default'=>'Default','none'=>'None','underline'=>'Underline','overline'=>'Overline','line-through'=>'Line Through'])
-                                        ->default('Default'),
-                            ]),
-                            Fieldset::make('Font Size')
-                                    ->columns([
-                                        'default' => 1,
-                                        'md' => 2,
-                                        'xl' => 3,
-                                    ])
-                                    ->schema([
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('fontSize.Desktop')->label('Desktop')->numeric(),
-                                                    Select::make('fontSizeUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('fontSize.Tablet')->label('Tablet')->numeric(),
-                                                    Select::make('fontSizeUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('fontSize.Mobile')->label('Mobile')->numeric(),
-                                                    Select::make('fontSizeUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                    ]),
-                                    Fieldset::make('Line Height')
-                                    ->columns([
-                                        'default' => 1,
-                                        'md' => 2,
-                                        'xl' => 3,
-                                    ])
-                                    ->schema([
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('lineHeight.Desktop')->label('Desktop')->numeric(),
-                                                    Select::make('lineHeightUnits.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('lineHeight.Tablet')->label('Tablet')->numeric(),
-                                                    Select::make('lineHeightUnits.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('lineHeight.Mobile')->label('Mobile')->numeric(),
-                                                    Select::make('lineHeightUnits.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                    ]),
-                                    Fieldset::make('Letter Spacing')
-                                    ->columns([
-                                        'default' => 1,
-                                        'md' => 2,
-                                        'xl' => 3,
-                                    ])
-                                    ->schema([
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('letterSpacing.Desktop')->label('Desktop')->numeric(),
-                                                    Select::make('letterSpacingUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('letterSpacing.Tablet')->label('Tablet')->numeric(),
-                                                    Select::make('letterSpacingUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('letterSpacing.Mobile')->label('Mobile')->numeric(),
-                                                    Select::make('letterSpacingUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                    ]),
-                        ])->columns(1)->columnSpanFull(),
-                Repeater::make('custom_typographies')
-                        ->schema([
-                            TextInput::make('key')->required(),
-                            TextInput::make('name')->required(),
-                            Grid::make([
-                                'default' => 1,
-                                'sm' => 2,
-                                'md' => 3,
-                                'lg' => 4,
-                                'xl' => 3,
-                            ])
-                            ->schema([
-                                TextInput::make('fontFamily')
-                                        ->label('Font Family'),
-                                Select::make('fontWeight')
-                                        ->options([
-                                            'Default'=>'Default','100'=>'100','200'=>'200','300'=>'300',
-                                            '400'=>'400','500'=>'500','600'=>'600','700'=>'700',
-                                            '800'=>'800','900'=>'900'
-                                        ])
-                                        ->default('Default'),
-                                Select::make('fontStyle')
-                                        ->options(['Default'=>'Default','normal'=>'Normal','italic'=>'Italic','oblique'=>'Oblique'])
-                                        ->default('Default'),
-                                Select::make('textTransform')
-                                        ->options(['Default'=>'Default','none'=>'None','capitalize'=>'Capitalize','uppercase'=>'Uppercase','lowercase'=>'Lowercase'])
-                                        ->default('Default'),
-                                Select::make('textDecoration')
-                                        ->options(['Default'=>'Default','none'=>'None','underline'=>'Underline','overline'=>'Overline','line-through'=>'Line Through'])
-                                        ->default('Default'),
-                            ]),
-                            Fieldset::make('Font Size')
-                                    ->columns([
-                                        'default' => 1,
-                                        'md' => 2,
-                                        'xl' => 3,
-                                    ])
-                                    ->schema([
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('fontSize.Desktop')->label('Desktop')->numeric(),
-                                                    Select::make('fontSizeUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('fontSize.Tablet')->label('Tablet')->numeric(),
-                                                    Select::make('fontSizeUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('fontSize.Mobile')->label('Mobile')->numeric(),
-                                                    Select::make('fontSizeUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                    ]),
-                            Fieldset::make('Line Height')
-                                    ->columns([
-                                        'default' => 1,
-                                        'md' => 2,
-                                        'xl' => 3,
-                                    ])
-                                    ->schema([
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('lineHeight.Desktop')->label('Desktop')->numeric(),
-                                                    Select::make('lineHeightUnits.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('lineHeight.Tablet')->label('Tablet')->numeric(),
-                                                    Select::make('lineHeightUnits.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('lineHeight.Mobile')->label('Mobile')->numeric(),
-                                                    Select::make('lineHeightUnits.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                    ]),
-                            Fieldset::make('Letter Spacing')
-                                    ->columns([
-                                        'default' => 1,
-                                        'md' => 2,
-                                        'xl' => 3,
-                                    ])
-                                    ->schema([
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('letterSpacing.Desktop')->label('Desktop')->numeric(),
-                                                    Select::make('letterSpacingUnit.Desktop')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('letterSpacing.Tablet')->label('Tablet')->numeric(),
-                                                    Select::make('letterSpacingUnit.Tablet')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                        Section::make()
-                                                ->schema([
-                                                    TextInput::make('letterSpacing.Mobile')->label('Mobile')->numeric(),
-                                                    Select::make('letterSpacingUnit.Mobile')->options(['px'=>'px','em'=>'em','%'=>'%'])->label('Units')->default('px'),
-                                                ])
-                                                ->columns(2),
-                                    ]),
-                        ])->columns(1)->columnSpanFull(),
+                            Textarea::make('colors')
+                            ->required()
+                            ->rows(8)
+                            ->label('Color JSON')->columnSpanFull(),
+                    ])->columns(1)->columnSpanFull(),
+                Section::make()
+                    ->schema([
+                        Textarea::make('color_gradients')
+                        ->required()
+                        ->rows(8)
+                        ->label('Color Gradient JSON')->columnSpanFull(),
+                    ])->columns(1)->columnSpanFull(),
+                Section::make()
+                    ->schema([
+                        Textarea::make('typographies')
+                        ->required()
+                        ->rows(8)
+                        ->label('Typographies JSON')->columnSpanFull(),
+                    ])->columns(1)->columnSpanFull(),
+                Section::make()
+                    ->schema([
+                        Textarea::make('custom_typographies')
+                        ->required()
+                        ->rows(8)
+                        ->label('Custom Typographies JSON')->columnSpanFull(),
+                    ])->columns(1)->columnSpanFull(),
                 Repeater::make('pages')
                         ->schema([
                             TextInput::make('name')
                             ->required(),
-                            // TextInput::make('slug')
-                            // ->required(),
                             Textarea::make('page')
                             ->required()
                             ->rows(8)

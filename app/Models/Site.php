@@ -8,7 +8,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Site extends Model
 {
-    protected $fillable = ['title', 'slug', 'description', 'content', 'is_premium', 'image', 'preview_url', 'dependencies', 'tags', 'colors', 'color_gradients', 'typographies', 'custom_typographies', 'pages'];
+    protected $fillable = [
+        'title', 
+        'slug', 
+        'description', 
+        'content', 
+        'is_premium', 
+        'image', 
+        'preview_url', 
+        'dependencies', 
+        'tags', 
+        'colors', 
+        'color_gradients', 
+        'typographies', 
+        'custom_typographies', 
+        'pages'
+    ];
 
     protected $casts = [
         'dependencies' => 'array',

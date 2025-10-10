@@ -153,8 +153,22 @@ class SiteController extends Controller
         // Fetch patterns with their associated categories
         $sites = $query->paginate($perPage, ['*'], 'page', $page)
             ->through(function ($site) use ($savedItems) {
-                $typographies = collect($site->typographies)
-                    ->reduce(function ($carry, $item) {
+
+                $colors = $site->colors;
+                if (is_string($colors)) {
+                    $colors = json_decode($colors, true);
+                }
+
+                $color_gradients = $site->color_gradients;
+                if (is_string($color_gradients)) {
+                    $color_gradients = json_decode($color_gradients, true);
+                }
+                
+                $typographies = $site->typographies;
+                if (is_string($typographies)) {
+                    $typographies = json_decode($typographies, true);
+                } else {
+                    $typographies = collect($site->typographies)->reduce(function ($carry, $item) {
                         $name = strtolower($item['name']);
 
                         $data = [
@@ -197,9 +211,13 @@ class SiteController extends Controller
 
                         return $carry;
                     }, []);
+                }
 
-                $custom_typographies = collect($site->custom_typographies)
-                    ->mapWithKeys(function ($item) {
+                $custom_typographies = $site->custom_typographies;
+                if (is_string($custom_typographies)) {
+                    $custom_typographies = json_decode($custom_typographies, true);
+                } else {
+                    $custom_typographies = collect($site->custom_typographies)->mapWithKeys(function ($item) {
                         $data = [
                             'name' => $item['name'] ?? 'Custom Typography',
                             'fontFamily'       => $item['fontFamily'] ?? 'Default',
@@ -230,6 +248,7 @@ class SiteController extends Controller
                             $item['key'] => $data
                         ];
                     });
+                }
 
                 return [
                     'id' => $site->id,
@@ -241,8 +260,8 @@ class SiteController extends Controller
                     'image' => $site->image,
                     'preview_url' => $site->preview_url,
                     'dependencies' => $site->dependencies,
-                    'colors' => $site->colors,
-                    'color_gradients' => $site->color_gradients,
+                    'colors' => $colors,
+                    'color_gradients' => $color_gradients,
                     'typographies' => $typographies,
                     'custom_typographies' => $custom_typographies,
                     // 'pages' => $site->pages,
