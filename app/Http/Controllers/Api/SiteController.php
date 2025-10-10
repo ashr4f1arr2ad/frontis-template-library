@@ -167,87 +167,11 @@ class SiteController extends Controller
                 $typographies = $site->typographies;
                 if (is_string($typographies)) {
                     $typographies = json_decode($typographies, true);
-                } else {
-                    $typographies = collect($site->typographies)->reduce(function ($carry, $item) {
-                        $name = strtolower($item['name']);
-
-                        $data = [
-                            'name' => $name ?? 'Typography',
-                            'fontFamily'       => $item['fontFamily'] ?? 'Default',
-                            'fontWeight'       => $item['fontWeight'] ?? 'Default',
-                            'fontStyle'        => $item['fontStyle'] ?? 'Default',
-                            'textTransform'    => $item['textTransform'] ?? 'Default',
-                            'textDecoration'   => $item['textDecoration'] ?? 'Default',
-                            'fontSize'         => $item['fontSize'] ?? [],
-                            'fontSizeUnit'     => $item['fontSizeUnit'] ?? [],
-                            'lineHeight'       => $item['lineHeight'] ?? [],
-                            'lineHeightUnits'  => $item['lineHeightUnits'] ?? [],
-                            'letterSpacing'    => $item['letterSpacing'] ?? [],
-                            'letterSpacingUnit'=> $item['letterSpacingUnit'] ?? [],
-                        ];
-
-                        // convert nulls in nested arrays to empty strings
-                        foreach (['fontSize','fontSizeUnit','lineHeight','lineHeightUnits','letterSpacing','letterSpacingUnit'] as $key) {
-                            if (isset($data[$key]) && is_array($data[$key])) {
-                                foreach ($data[$key] as $device => $value) {
-                                    if (is_null($value)) {
-                                        $data[$key][$device] = '';
-                                    }
-                                }
-                            }
-                        }
-
-                        // handle heading vs top-level
-                        if (in_array($name, ['all', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
-                            if (!isset($carry['heading'])) $carry['heading'] = [];
-                            $carry['heading'][$name] = isset($carry['heading'][$name])
-                                ? array_merge_recursive($carry['heading'][$name], $data)
-                                : $data;
-                        } else {
-                            $carry[$name] = isset($carry[$name])
-                                ? array_merge_recursive($carry[$name], $data)
-                                : $data;
-                        }
-
-                        return $carry;
-                    }, []);
                 }
 
                 $custom_typographies = $site->custom_typographies;
                 if (is_string($custom_typographies)) {
                     $custom_typographies = json_decode($custom_typographies, true);
-                } else {
-                    $custom_typographies = collect($site->custom_typographies)->mapWithKeys(function ($item) {
-                        $data = [
-                            'name' => $item['name'] ?? 'Custom Typography',
-                            'fontFamily'       => $item['fontFamily'] ?? 'Default',
-                            'fontWeight'       => $item['fontWeight'] ?? 'Default',
-                            'fontStyle'        => $item['fontStyle'] ?? 'Default',
-                            'textTransform'    => $item['textTransform'] ?? 'Default',
-                            'textDecoration'   => $item['textDecoration'] ?? 'Default',
-                            'fontSize'         => $item['fontSize'] ?? [],
-                            'fontSizeUnit'     => $item['fontSizeUnit'] ?? [],
-                            'lineHeight'       => $item['lineHeight'] ?? [],
-                            'lineHeightUnits'  => $item['lineHeightUnits'] ?? [],
-                            'letterSpacing'    => $item['letterSpacing'] ?? [],
-                            'letterSpacingUnit'=> $item['letterSpacingUnit'] ?? [],
-                        ];
-
-                        // Only convert null values to empty strings for fontSize, lineHeight, letterSpacing
-                        foreach (['fontSize', 'lineHeight', 'letterSpacing'] as $key) {
-                            if (isset($data[$key]) && is_array($data[$key])) {
-                                foreach ($data[$key] as $device => $value) {
-                                    if (is_null($value)) {
-                                        $data[$key][$device] = '';
-                                    }
-                                }
-                            }
-                        }
-
-                        return [
-                            $item['key'] => $data
-                        ];
-                    });
                 }
 
                 return [
