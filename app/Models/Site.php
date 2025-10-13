@@ -28,10 +28,10 @@ class Site extends Model
     protected $casts = [
         'dependencies' => 'array',
         'tags' => 'array',
-        // 'colors' => 'array',
-        // 'color_gradients' => 'array',
-        // 'typographies' => 'array',
-        // 'custom_typographies' => 'array',
+        'colors' => 'array',
+        'color_gradients' => 'array',
+        'typographies' => 'array',
+        'custom_typographies' => 'array',
         'pages' => 'array',
     ];
 
