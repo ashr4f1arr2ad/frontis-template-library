@@ -97,7 +97,6 @@ class SiteForm
                 Section::make()
                     ->schema([
                         Textarea::make('custom_typographies')
-                        ->required()
                         ->rows(8)
                         ->label('Custom Typographies JSON')->columnSpanFull(),
                     ])->columns(1)->columnSpanFull(),
