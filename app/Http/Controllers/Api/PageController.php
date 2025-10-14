@@ -159,6 +159,7 @@ class PageController extends Controller
                     'title' => $page->title,
                     'slug' => $page->slug,
                     'content' => $page->content,
+                    'preview_url' => $page->preview_url,
                     'tags' => $page->tags,
                     'description' => $page->description,
                     'image' => $page->image,
