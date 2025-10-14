@@ -28,7 +28,7 @@ class CategoriesTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->closeModalByClickingAway(false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

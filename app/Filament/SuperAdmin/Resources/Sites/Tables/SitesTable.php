@@ -39,7 +39,7 @@ class SitesTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->closeModalByClickingAway(false),
                 DeleteAction::make()
             ])
             ->toolbarActions([
