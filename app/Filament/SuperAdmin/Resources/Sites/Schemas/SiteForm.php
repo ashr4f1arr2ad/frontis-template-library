@@ -36,7 +36,6 @@ class SiteForm
                     ->label('Slug')
                     ->readOnly(),
                 Textarea::make('content')
-                    ->required()
                     ->label('Content')
                     ->rows(8)->columnSpanFull(),
                 TagsInput::make('tags')
