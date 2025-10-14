@@ -32,6 +32,9 @@ class PagesForm
                     ->readOnly(),
                 Textarea::make('content')
                     ->label('Content'),
+                TextInput::make('preview_url')
+                    ->url()
+                    ->label('Preview Url')->columnSpanFull(),
                 Repeater::make('dependencies')
                     ->schema([
                         TextInput::make('name')

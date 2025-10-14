@@ -46,6 +46,9 @@ class PatternForm
                         ->required()
                         ->label('Pattern Image')
                         ->uploadingMessage('Uploading image...'),
+                    TextInput::make('preview_url')
+                        ->url()
+                        ->label('Preview Url')->columnSpanFull(),
                     Toggle::make('is_premium')
                         ->label('Premium'),
                     MarkdownEditor::make('description'),

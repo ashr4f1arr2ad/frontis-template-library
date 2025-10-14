@@ -9,7 +9,17 @@ class Pattern extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'slug', 'description', 'is_premium', 'image', 'pattern_json', 'tags', 'categories'];
+    protected $fillable = [
+        'title', 
+        'slug', 
+        'description', 
+        'preview_url',
+        'is_premium', 
+        'image', 
+        'pattern_json', 
+        'tags', 
+        'categories'
+    ];
 
     protected $casts = [
         'is_premium' => 'boolean',
