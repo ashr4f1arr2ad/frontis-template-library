@@ -31,7 +31,6 @@ class PagesForm
                     ->label('Slug')
                     ->readOnly(),
                 Textarea::make('content')
-                    ->required()
                     ->label('Content'),
                 Repeater::make('dependencies')
                     ->schema([
