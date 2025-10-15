@@ -16,6 +16,7 @@ class Site extends Model
         'is_premium', 
         'image', 
         'preview_url', 
+        'uploads_url', 
         'dependencies', 
         'tags', 
         'colors', 

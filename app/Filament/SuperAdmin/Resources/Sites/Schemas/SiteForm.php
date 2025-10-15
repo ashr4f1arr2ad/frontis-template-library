@@ -65,6 +65,9 @@ class SiteForm
                     ->url()
                     ->required()
                     ->label('Preview Url')->columnSpanFull(),
+                TextInput::make('uploads_url')
+                    ->url()
+                    ->label('Uploads Url')->columnSpanFull(),
                 Repeater::make('dependencies')
                         ->schema([
                             TextInput::make('name')

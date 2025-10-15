@@ -65,7 +65,8 @@ class ImportController extends Controller
         ]);
 
         // Get pages JSON by site ID
-        $site_json = Site::query()->where('id', $validated['site_id'])->value('pages');
+        // $site_json = Site::query()->where('id', $validated['site_id'])->value('pages');
+        $site_json = Site::query()->select(['pages', 'uploads_url'])->where('id', $validated['site_id'])->first();
 
         // Check if site_json is null (record not found)
         if (is_null($site_json)) {
