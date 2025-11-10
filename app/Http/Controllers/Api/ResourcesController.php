@@ -37,7 +37,133 @@ class ResourcesController extends Controller
         $categorySlug = $request->input('category');
         $type = $request->input('type');
 
-        if ($type === 'site') {
+        if ($type === 'patterns') {
+            $category = Category::where('slug', $categorySlug)->first();
+        
+            if (!$category) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Category not found for slug: ' . $categorySlug,
+                ], 404);
+            }
+        
+            $patternIds = DB::table('category_pattern')
+                ->where('category_id', $category->id)
+                ->pluck('pattern_id')
+                ->toArray();
+        
+            if (count($patternIds) === 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'No patterns found for this category',
+                    'items' => [],
+                    'pagination' => [
+                        'current_page' => 1,
+                        'per_page' => (int) $request->input('per_page', 12),
+                        'total' => 0,
+                        'last_page' => 0,
+                        'from' => null,
+                        'to' => null,
+                    ],
+                ]);
+            }
+        
+            $page = (int) $request->input('page', 1);
+            $perPage = (int) $request->input('per_page', 12);
+        
+            $query = Pattern::select('id', 'title', 'slug', 'image', 'preview_url', 'read_more_url', 'is_premium')->whereIn('id', $patternIds);
+        
+            $patterns = $query->paginate($perPage, ['*'], 'page', $page)
+                ->through(function ($pattern) {
+                    return [
+                        'id' => $pattern->id,
+                        'title' => $pattern->title,
+                        'slug' => $pattern->slug,
+                        'image' => $pattern->image,
+                        'preview_url' => $pattern->preview_url,
+                        'read_more_url' => $pattern->read_more_url,
+                        'is_premium' => $pattern->is_premium,
+                    ];
+                });
+        
+            return response()->json([
+                'status' => 'success',
+                'items' => $patterns->items(),
+                'pagination' => [
+                    'current_page' => $patterns->currentPage(),
+                    'per_page' => $patterns->perPage(),
+                    'total' => $patterns->total(),
+                    'last_page' => $patterns->lastPage(),
+                    'from' => $patterns->firstItem(),
+                    'to' => $patterns->lastItem(),
+                ],
+            ]);
+        }
+
+        if ($type === 'pages') {
+            $category = Category::where('slug', $categorySlug)->first();
+        
+            if (!$category) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Category not found for slug: ' . $categorySlug,
+                ], 404);
+            }
+        
+            $pagesIds = DB::table('category_page')
+                ->where('category_id', $category->id)
+                ->pluck('page_id')
+                ->toArray();
+        
+            if (count($siteIds) === 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'No pages found for this category',
+                    'items' => [],
+                    'pagination' => [
+                        'current_page' => 1,
+                        'per_page' => (int) $request->input('per_page', 12),
+                        'total' => 0,
+                        'last_page' => 0,
+                        'from' => null,
+                        'to' => null,
+                    ],
+                ]);
+            }
+        
+            $page = (int) $request->input('page', 1);
+            $perPage = (int) $request->input('per_page', 12);
+        
+            $query = Page::select('id', 'title', 'slug', 'image', 'preview_url', 'read_more_url', 'is_premium')->whereIn('id', $pagesIds);
+        
+            $pages = $query->paginate($perPage, ['*'], 'page', $page)
+                ->through(function ($site) {
+                    return [
+                        'id' => $page->id,
+                        'title' => $page->title,
+                        'slug' => $page->slug,
+                        'image' => $page->image,
+                        'preview_url' => $page->preview_url,
+                        'read_more_url' => $page->read_more_url,
+                        'is_premium' => $page->is_premium,
+                    ];
+                });
+        
+            return response()->json([
+                'status' => 'success',
+                'items' => $pages->items(),
+                'pagination' => [
+                    'current_page' => $pages->currentPage(),
+                    'per_page' => $pages->perPage(),
+                    'total' => $pages->total(),
+                    'last_page' => $pages->lastPage(),
+                    'from' => $pages->firstItem(),
+                    'to' => $pages->lastItem(),
+                ],
+            ]);
+        }
+
+        if ($type === 'sites') {
             $category = Category::where('slug', $categorySlug)->first();
         
             if (!$category) {
