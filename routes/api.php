@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\PatternController;
 use App\Http\Controllers\Api\SiteController;
 use App\Http\Controllers\Api\SubscriptionController;
+use App\Http\Controllers\Api\ResourcesController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('secret.key')->group(function () {
@@ -37,4 +38,7 @@ Route::middleware('secret.key')->group(function () {
 
     // Active license key
     Route::post('/active/license', [ActiveLicense::class, 'activate']);
+
+    // Webhooks
+    Route::post('/resources', [ResourcesController::class, 'resources']);
 });
