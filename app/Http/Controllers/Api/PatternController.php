@@ -159,6 +159,7 @@ class PatternController extends Controller
                     'slug' => $pattern->slug,
                     'description' => $pattern->description,
                     'preview_url' => $pattern->preview_url,
+                    'read_more_url' => $pattern->read_more_url,
                     'is_premium' => $pattern->is_premium,
                     'image' => $pattern->image,
                     'tags' => $pattern->tags,
