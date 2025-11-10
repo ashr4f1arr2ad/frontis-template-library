@@ -65,6 +65,9 @@ class SiteForm
                     ->url()
                     ->required()
                     ->label('Preview Url')->columnSpanFull(),
+                TextInput::make('read_more_url')
+                    ->url()
+                    ->label('Read More Url')->columnSpanFull(),
                 TextInput::make('uploads_url')
                     ->url()
                     ->label('Uploads Url')->columnSpanFull(),

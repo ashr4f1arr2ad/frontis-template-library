@@ -14,6 +14,7 @@ class Page extends Model
         'description', 
         'content', 
         'preview_url',
+        'read_more_url',
         'is_premium', 
         'dependencies', 
         'image', 

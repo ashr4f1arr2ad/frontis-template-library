@@ -35,6 +35,9 @@ class PagesForm
                 TextInput::make('preview_url')
                     ->url()
                     ->label('Preview Url')->columnSpanFull(),
+                TextInput::make('read_more_url')
+                    ->url()
+                    ->label('Read More Url')->columnSpanFull(),
                 Repeater::make('dependencies')
                     ->schema([
                         TextInput::make('name')

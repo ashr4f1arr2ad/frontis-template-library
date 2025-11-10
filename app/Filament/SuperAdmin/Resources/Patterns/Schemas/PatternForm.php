@@ -49,6 +49,9 @@ class PatternForm
                     TextInput::make('preview_url')
                         ->url()
                         ->label('Preview Url')->columnSpanFull(),
+                    TextInput::make('read_more_url')
+                        ->url()
+                        ->label('Read More Url')->columnSpanFull(),
                     Toggle::make('is_premium')
                         ->label('Premium'),
                     MarkdownEditor::make('description'),

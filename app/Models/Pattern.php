@@ -14,6 +14,7 @@ class Pattern extends Model
         'slug', 
         'description', 
         'preview_url',
+        'read_more_url',
         'is_premium', 
         'image', 
         'pattern_json', 
