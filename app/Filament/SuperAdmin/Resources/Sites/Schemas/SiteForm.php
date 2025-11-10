@@ -82,28 +82,24 @@ class SiteForm
                 Section::make()
                         ->schema([
                             Textarea::make('headers')
-                            ->required()
                             ->rows(8)
                             ->label('Header JSON')->columnSpanFull(),
                         ])->columns(1)->columnSpanFull(),
                 Section::make()
                     ->schema([
                         Textarea::make('footers')
-                        ->required()
                         ->rows(8)
                         ->label('Footer JSON')->columnSpanFull(),
                     ])->columns(1)->columnSpanFull(),
                 Section::make()
                     ->schema([
                         Textarea::make('templates')
-                        ->required()
                         ->rows(8)
                         ->label('Templates JSON')->columnSpanFull(),
                     ])->columns(1)->columnSpanFull(),
                 Section::make()
                     ->schema([
                         Textarea::make('posts')
-                        ->required()
                         ->rows(8)
                         ->label('Posts JSON')->columnSpanFull(),
                     ])->columns(1)->columnSpanFull(),
