@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    public  function index(Request $request): \Illuminate\Http\JsonResponse
+    public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'email' => 'nullable|email',
