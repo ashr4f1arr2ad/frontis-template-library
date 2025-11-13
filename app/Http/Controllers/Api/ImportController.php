@@ -93,7 +93,8 @@ class ImportController extends Controller
             "templates" => json_decode($site_json["templates"]),
             "headers" => json_decode($site_json["headers"]),
             "footers" => json_decode($site_json["footers"]),
-            "posts" => json_decode($site_json["posts"])
+            "posts" => json_decode($site_json["posts"]),
+            "uploads_url" => $site_json["uploads_url"]
         ];
 
         return response()->json([
