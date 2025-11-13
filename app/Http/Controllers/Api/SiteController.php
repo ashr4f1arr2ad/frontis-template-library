@@ -153,27 +153,6 @@ class SiteController extends Controller
         // Fetch patterns with their associated categories
         $sites = $query->paginate($perPage, ['*'], 'page', $page)
             ->through(function ($site) use ($savedItems) {
-
-                $headers = $site->headers;
-                if (is_string($headers)) {
-                    $headers = json_decode($headers, true);
-                }
-
-                $footers = $site->footers;
-                if (is_string($footers)) {
-                    $footers = json_decode($footers, true);
-                }
-
-                $templates = $site->templates;
-                if (is_string($templates)) {
-                    $templates = json_decode($templates, true);
-                }
-
-                $posts = $site->posts;
-                if (is_string($posts)) {
-                    $posts = json_decode($posts, true);
-                }
-
                 $colors = $site->colors;
                 if (is_string($colors)) {
                     $colors = json_decode($colors, true);
@@ -205,15 +184,10 @@ class SiteController extends Controller
                     'preview_url' => $site->preview_url,
                     'read_more_url' => $site->read_more_url,
                     'dependencies' => $site->dependencies,
-                    'headers' => $headers,
-                    'footers' => $footers,
-                    'templates' => $templates,
-                    'posts' => $posts,
                     'colors' => $colors,
                     'color_gradients' => $color_gradients,
                     'typographies' => $typographies,
                     'custom_typographies' => $custom_typographies,
-                    // 'pages' => $site->pages,
                     'is_premium' => $site->is_premium,
                     'categories' => $site->categories->pluck('name')->toArray(),
                     'saved' => in_array((int)$site->id, $savedItems),

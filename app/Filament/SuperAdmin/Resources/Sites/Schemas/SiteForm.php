@@ -133,6 +133,7 @@ class SiteForm
                         ->schema([
                             TextInput::make('name')
                             ->required(),
+                            TextInput::make('template'),
                             Textarea::make('page')
                             ->required()
                             ->rows(8)
