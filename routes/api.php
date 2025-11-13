@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\PatternController;
 use App\Http\Controllers\Api\SiteController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\ResourcesController;
+use App\Http\Controllers\Api\CategoriesController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('secret.key')->group(function () {
@@ -41,4 +42,8 @@ Route::middleware('secret.key')->group(function () {
 
     // Webhooks
     Route::post('/resources', [ResourcesController::class, 'resources']);
+    Route::post('/resources/store', [ResourcesController::class, 'store']);
+
+    // Categories
+    Route::get('/categories', [CategoriesController::class, 'get_categories']);
 });

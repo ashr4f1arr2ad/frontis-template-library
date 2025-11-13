@@ -14,6 +14,9 @@ use App\Models\Site;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class ResourcesController extends Controller
 {
@@ -225,5 +228,73 @@ class ResourcesController extends Controller
                 ],
             ]);
         }
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string',
+            'slug' => 'required|string',
+            'content' => 'nullable|string',
+            'tags' => 'required|array',
+            'categories' => 'required|array',
+            'description' => 'required|string',
+            'image' => 'required|string',
+            'preview_url' => 'required|string',
+            'read_more_url' => 'nullable|string',
+            'uploads_url' => 'nullable|string',
+            'is_premium' => 'nullable|string',
+            'dependencies' => 'required|array',
+            'headers' => 'nullable|string',
+            'footers' => 'nullable|string',
+            'templates' => 'nullable|string',
+            'posts' => 'nullable|string',
+            'colors' => 'required|string',
+            'color_gradients' => 'nullable|string',
+            'typographies' => 'required|string',
+            'custom_typographies' => 'required|string',
+            'pages' => 'required|array'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $data = $validator->validated();
+
+        // Image Handling
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('uploads/sites', 'public');
+            $data['image'] = asset('storage/' . $path);
+        } else {
+            $imageUrl = $request->input('image');
+            $imageContents = file_get_contents($imageUrl);
+
+            if ($imageContents === false) {
+                throw new \Exception("Unable to download image.");
+            }
+
+            $originalName = basename(parse_url($imageUrl, PHP_URL_PATH));
+
+            if (!Str::contains($originalName, '.')) {
+                $originalName .= '.jpg';
+            }
+
+            $fileName = 'sites/' . time() . '_' . $originalName;
+            Storage::disk('public')->put($fileName, $imageContents);
+            $data['image'] = $fileName;
+        }
+
+        $site = Site::create($data);
+        $site->categories()->sync($request->categories);
+
+        return response()->json([
+            'message' => 'Site created successfully.',
+            'site_id' => $site->id
+        ], 200);
     }
 }
