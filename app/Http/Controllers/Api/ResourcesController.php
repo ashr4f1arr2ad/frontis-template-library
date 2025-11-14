@@ -233,6 +233,7 @@ class ResourcesController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
+            'site_id' => 'nullable|integer|exists:sites,id',
             'title' => 'required|string',
             'slug' => 'required|string',
             'content' => 'nullable|string',
@@ -289,11 +290,20 @@ class ResourcesController extends Controller
             $data['image'] = $fileName;
         }
 
-        $site = Site::create($data);
+        // Check if site_id exists => update, else create
+        if (!empty($data['site_id'])) {
+            $site = Site::findOrFail($data['site_id']);
+            $site->update($data);
+            $message = 'Site updated successfully.';
+        } else {
+            $site = Site::create($data);
+            $message = 'Site created successfully.';
+        }
+
         $site->categories()->sync($request->categories);
 
         return response()->json([
-            'message' => 'Site created successfully.',
+            'message' => $message,
             'site_id' => $site->id
         ], 200);
     }
