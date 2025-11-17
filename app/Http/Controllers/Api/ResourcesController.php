@@ -233,7 +233,7 @@ class ResourcesController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'site_id' => 'nullable|integer|exists:sites,id',
+            'site_id' => 'nullable|integer',
             'title' => 'required|string',
             'slug' => 'required|string',
             'content' => 'nullable|string',
@@ -268,26 +268,30 @@ class ResourcesController extends Controller
         $data = $validator->validated();
 
         // Image Handling
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('uploads/sites', 'public');
-            $data['image'] = asset('storage/' . $path);
+        if (Str::contains($request->input('image'), ['sites/'])) {
+            $data['image'] = $request->input('image');
         } else {
-            $imageUrl = $request->input('image');
-            $imageContents = file_get_contents($imageUrl);
-
-            if ($imageContents === false) {
-                throw new \Exception("Unable to download image.");
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('uploads/sites', 'public');
+                $data['image'] = asset('storage/' . $path);
+            } else {
+                $imageUrl = $request->input('image');
+                $imageContents = file_get_contents($imageUrl);
+    
+                if ($imageContents === false) {
+                    throw new \Exception("Unable to download image.");
+                }
+    
+                $originalName = basename(parse_url($imageUrl, PHP_URL_PATH));
+    
+                if (!Str::contains($originalName, '.')) {
+                    $originalName .= '.jpg';
+                }
+    
+                $fileName = 'sites/' . time() . '_' . $originalName;
+                Storage::disk('public')->put($fileName, $imageContents);
+                $data['image'] = $fileName;
             }
-
-            $originalName = basename(parse_url($imageUrl, PHP_URL_PATH));
-
-            if (!Str::contains($originalName, '.')) {
-                $originalName .= '.jpg';
-            }
-
-            $fileName = 'sites/' . time() . '_' . $originalName;
-            Storage::disk('public')->put($fileName, $imageContents);
-            $data['image'] = $fileName;
         }
 
         // Check if site_id exists => update, else create

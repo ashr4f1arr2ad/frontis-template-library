@@ -209,4 +209,34 @@ class SiteController extends Controller
             ]
         ]);
     }
+
+    public function get_site_by_id(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'site_id' => 'required|exists:sites,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $site_json = Site::query()
+        ->select(['content', 'tags', 'description', 'image', 'uploads_url', 'read_more_url', 'is_premium', 'dependencies'])
+        ->where('id', $request->site_id)
+        ->first();
+
+        $categoryIds = \DB::table('category_site')
+        ->where('site_id', $request->site_id)
+        ->pluck('category_id');
+
+        return response()->json([
+            'success' => true,
+            'data' => $site_json,
+            'categories' => $categoryIds
+        ]);
+    }
 }

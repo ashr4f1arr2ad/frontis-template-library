@@ -46,4 +46,5 @@ Route::middleware('secret.key')->group(function () {
 
     // Categories
     Route::get('/categories', [CategoriesController::class, 'get_categories']);
+    Route::post('/site', [SiteController::class, 'get_site_by_id']);
 });
