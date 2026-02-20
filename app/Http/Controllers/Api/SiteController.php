@@ -213,7 +213,8 @@ class SiteController extends Controller
     public function get_site_by_id(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'site_id' => 'required|exists:sites,id'
+            'site_id' => 'required|exists:sites,id',
+            'slug' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -224,18 +225,41 @@ class SiteController extends Controller
             ], 422);
         }
 
-        $site_json = Site::query()
-        ->select(['content', 'tags', 'description', 'image', 'uploads_url', 'read_more_url', 'is_premium', 'dependencies'])
-        ->where('id', $request->site_id)
-        ->first();
+        $siteQuery = Site::query()
+        ->select([
+            'id',
+            'content',
+            'tags',
+            'description',
+            'image',
+            'uploads_url',
+            'read_more_url',
+            'is_premium',
+            'dependencies'
+        ]);
+
+        if ($request->site_id) {
+            $siteQuery->where('id', $request->site_id);
+        } else {
+            $siteQuery->where('slug', $request->slug);
+        }
+
+        $site = $siteQuery->first();
+
+        if (!$site) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Site not found'
+            ], 404);
+        }    
 
         $categoryIds = \DB::table('category_site')
-        ->where('site_id', $request->site_id)
+        ->where('site_id', $site->id)
         ->pluck('category_id');
 
         return response()->json([
             'success' => true,
-            'data' => $site_json,
+            'data' => $site,
             'categories' => $categoryIds
         ]);
     }

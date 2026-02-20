@@ -300,8 +300,18 @@ class ResourcesController extends Controller
             $site->update($data);
             $message = 'Site updated successfully.';
         } else {
-            $site = Site::create($data);
-            $message = 'Site created successfully.';
+            // Check if slug already exists
+            $existingSite = Site::where('slug', $data['slug'])->first();
+
+            if ($existingSite) {
+                $existingSite->update($data);
+                $site = $existingSite;
+                $message = 'Site updated successfully (matched by slug).';
+        
+            } else {
+                $site = Site::create($data);
+                $message = 'Site created successfully.';
+            }
         }
 
         $site->categories()->sync($request->categories);
