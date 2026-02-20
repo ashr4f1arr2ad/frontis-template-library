@@ -213,8 +213,8 @@ class SiteController extends Controller
     public function get_site_by_id(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'site_id'   => 'required_without:site_slug|nullable|numeric',
-            'site_slug' => 'required_without:site_id|nullable|string',
+            'site_id'   => 'nullable|string',
+            'site_slug' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -225,25 +225,41 @@ class SiteController extends Controller
             ], 422);
         }
 
-        $site = Site::query()
-        ->select([
-            'id',
-            'content',
-            'tags',
-            'description',
-            'image',
-            'uploads_url',
-            'read_more_url',
-            'is_premium',
-            'dependencies'
-        ])
-        ->when($request->filled('site_id'), function ($q) use ($request) {
-            $q->where('id', intval($request->site_id));
-        })
-        ->when($request->filled('slug'), function ($q) use ($request) {
-            $q->where('slug', trim($request->slug));
-        })
-        ->first();
+        $site = null;
+
+        if ($request->filled('site_id')) {
+            $site = Site::query()
+                ->select([
+                    'id',
+                    'content',
+                    'tags',
+                    'description',
+                    'image',
+                    'uploads_url',
+                    'read_more_url',
+                    'is_premium',
+                    'dependencies'
+                ])
+                ->where('id', (int) trim($request->site_id))
+                ->first();
+        }
+    
+        if (!$site && $request->filled('site_slug')) {
+            $site = Site::query()
+                ->select([
+                    'id',
+                    'content',
+                    'tags',
+                    'description',
+                    'image',
+                    'uploads_url',
+                    'read_more_url',
+                    'is_premium',
+                    'dependencies'
+                ])
+                ->where('slug', trim($request->site_slug))
+                ->first();
+        }
 
         if (!$site) {
             return response()->json([
