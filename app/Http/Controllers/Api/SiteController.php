@@ -239,7 +239,7 @@ class SiteController extends Controller
         ]);
 
         if ($request->site_id) {
-            $siteQuery->where('id', $request->site_id);
+            $siteQuery->where('id', intval($request->site_id));
         } else {
             $siteQuery->where('slug', $request->slug);
         }
