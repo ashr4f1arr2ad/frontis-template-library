@@ -296,18 +296,35 @@ class ResourcesController extends Controller
 
         // Check if site_id exists => update, else create
         if (!empty($data['site_id'])) {
-            $site = Site::findOrFail($data['site_id']);
-            $site->update($data);
-            $message = 'Site updated successfully.';
-        } else {
-            // Check if slug already exists
-            $existingSite = Site::where('slug', $data['slug'])->first();
 
-            if ($existingSite) {
-                $existingSite->update($data);
-                $site = $existingSite;
-                $message = 'Site updated successfully (matched by slug).';
+            // Try to find by ID first
+            $site = Site::find($data['site_id']);
         
+            if ($site) {
+                // Update by ID
+                $site->update($data);
+                $message = 'Site updated successfully (by ID).';
+            } else {
+                // ID not found → fallback to slug
+                $site = Site::where('slug', $data['slug'])->first();
+        
+                if ($site) {
+                    $site->update($data);
+                    $message = 'Site updated successfully (matched by slug).';
+                } else {
+                    // Create new
+                    $site = Site::create($data);
+                    $message = 'Site created successfully.';
+                }
+            }
+        
+        } else {
+            // No ID → check by slug
+            $site = Site::where('slug', $data['slug'])->first();
+        
+            if ($site) {
+                $site->update($data);
+                $message = 'Site updated successfully (matched by slug).';
             } else {
                 $site = Site::create($data);
                 $message = 'Site created successfully.';
