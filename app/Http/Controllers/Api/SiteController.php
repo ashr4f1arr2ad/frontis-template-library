@@ -213,8 +213,8 @@ class SiteController extends Controller
     public function get_site_by_id(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'site_id' => 'required|exists:sites,id',
-            'site_slug' => 'required|string'
+            'site_id' => 'nullable|string',
+            'site_slug' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
