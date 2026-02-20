@@ -134,6 +134,7 @@ class SiteForm
                             TextInput::make('name')
                             ->required(),
                             TextInput::make('template'),
+                            TextInput::make('badge'),
                             Textarea::make('page')
                             ->required()
                             ->rows(8)
