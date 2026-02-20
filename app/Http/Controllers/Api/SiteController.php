@@ -213,8 +213,8 @@ class SiteController extends Controller
     public function get_site_by_id(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'site_id' => 'nullable|string',
-            'site_slug' => 'nullable|string'
+            'site_id'   => 'required_without:site_slug|nullable|numeric',
+            'site_slug' => 'required_without:site_id|nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -225,7 +225,7 @@ class SiteController extends Controller
             ], 422);
         }
 
-        $siteQuery = Site::query()
+        $site = Site::query()
         ->select([
             'id',
             'content',
@@ -236,15 +236,14 @@ class SiteController extends Controller
             'read_more_url',
             'is_premium',
             'dependencies'
-        ]);
-
-        if ($request->site_id) {
-            $siteQuery->where('id', intval($request->site_id));
-        } else {
-            $siteQuery->where('slug', $request->slug);
-        }
-
-        $site = $siteQuery->first();
+        ])
+        ->when($request->filled('site_id'), function ($q) use ($request) {
+            $q->where('id', intval($request->site_id));
+        })
+        ->when($request->filled('slug'), function ($q) use ($request) {
+            $q->where('slug', trim($request->slug));
+        })
+        ->first();
 
         if (!$site) {
             return response()->json([
