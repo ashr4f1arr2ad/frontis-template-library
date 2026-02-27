@@ -33,10 +33,5 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
         $adminUser->assignRole('admin');
-
-        // Create 9 admin users
-        User::factory()->count(9)->create()->each(function ($user) {
-            $user->assignRole('admin');
-        });
     }
 }
