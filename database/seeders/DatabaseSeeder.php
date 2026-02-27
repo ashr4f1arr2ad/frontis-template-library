@@ -26,6 +26,14 @@ class DatabaseSeeder extends Seeder
         ]);
         $superAdmin->assignRole('superadmin');
 
+        // Create one fixed admin user
+        $adminUser = User::create([
+            'name' => 'Admin User',
+            'email' => 'user@gmail.com',
+            'password' => bcrypt('password'),
+        ]);
+        $adminUser->assignRole('admin');
+
         // Create 9 admin users
         User::factory()->count(9)->create()->each(function ($user) {
             $user->assignRole('admin');
