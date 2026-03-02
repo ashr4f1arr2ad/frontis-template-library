@@ -20,7 +20,7 @@ class CloudSiteResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'CloudSite';
+    // protected static ?string $recordTitleAttribute = 'CloudSite';
 
     public static function form(Schema $schema): Schema
     {
@@ -43,8 +43,8 @@ class CloudSiteResource extends Resource
     {
         return [
             'index' => ListCloudSites::route('/'),
-            'create' => CreateCloudSite::route('/create'),
-            'edit' => EditCloudSite::route('/{record}/edit'),
+            // 'create' => CreateCloudSite::route('/create'),
+            // 'edit' => EditCloudSite::route('/{record}/edit'),
         ];
     }
 }
