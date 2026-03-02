@@ -196,15 +196,14 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $request->email)->first();
-
-        if ($user->password === $request->hashed_password || Auth::attempt($request->only('email', 'password'))) {
-        } else {
+        if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'status' => false,
                 'message' => 'Invalid credentials'
             ], 401);
         }
+
+        $user = Auth::user();
 
         $accessToken = $user->createToken(
             $request->device_name,
