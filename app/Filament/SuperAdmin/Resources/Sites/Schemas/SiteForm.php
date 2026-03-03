@@ -139,6 +139,7 @@ class SiteForm
                             ->required()
                             ->rows(8)
                             ->label('Page JSON')->columnSpanFull(),
+                            TextInput::make('featured_image')->url()
                     ])->columns(1)->columnSpanFull(),
                 Toggle::make('is_premium')
                     ->label('Premium'),

@@ -85,7 +85,8 @@ class ImportController extends Controller
                 "slug"  => Str::slug($page["name"]),
                 "content" => $page_content->content,
                 "template" => $page["template"],
-                "badge" => $page["badge"]
+                "badge" => $page["badge"],
+                "featured_image" => $page["featured_image"]
             ];
         }
 
