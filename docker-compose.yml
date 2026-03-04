@@ -1,0 +1,57 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: frontis-portal:latest
+        restart: always
+        environment:
+            - APP_ENV=production
+            - APP_DEBUG=false
+        volumes:
+            - .env:/var/www/html/.env
+            - ./storage:/var/www/html/storage
+        ports:
+            - "80:80"
+        networks:
+            - app-network
+    db:
+        image: mysql:8.0
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=s161091_template
+            - DB_USERNAME=u161091_template
+            - DB_PASSWORD=EtpPdihrYMWQLmG1
+        ports:
+            - "3306:3306"
+        networks:
+            - app-network
+    # Optional: Redis service (based on .env requirements)
+    redis:
+        image: redis:alpine
+        restart: always
+        networks:
+            - app-network
+
+    # Optional: Queue Worker (uses the same image)
+    worker:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        command: ["php", "artisan", "queue:work", "--tries=3"]
+        environment:
+            - APP_ENV=production
+        volumes:
+            - .env:/var/www/html/.env
+            - ./storage:/var/www/html/storage
+        networks:
+            - app-network
+        depends_on:
+            - app
+            - redis
+
+networks:
+    app-network:
+        driver: bridge
