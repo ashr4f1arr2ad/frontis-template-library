@@ -9,7 +9,7 @@ RUN npm run build
 # --- App stage: PHP environment ---
 FROM php:8.4-fpm-alpine
 
-# Install system dependencies
+# Install system dependencies + build deps
 RUN apk add --no-cache \
     icu-dev \
     libzip-dev \
@@ -19,20 +19,24 @@ RUN apk add --no-cache \
     nginx \
     supervisor \
     bash \
-    mysql-client
+    mysql-client \
+    $PHPIZE_DEPS
 
-# Install PHP extensions
+# Install PHP extensions + Redis
 RUN docker-php-ext-install \
-    intl \
-    pdo_mysql \
-    bcmath \
-    zip \
-    opcache \
-    mbstring \
-    exif \
-    pcntl \
-    gd \
-    xml
+        intl \
+        pdo_mysql \
+        bcmath \
+        zip \
+        opcache \
+        mbstring \
+        exif \
+        pcntl \
+        gd \
+        xml \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del $PHPIZE_DEPS
 
 # Configure PHP-FPM
 COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini

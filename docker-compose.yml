@@ -21,6 +21,8 @@ services:
         environment:
             - MYSQL_ROOT_PASSWORD=root
             - MYSQL_DATABASE=s161091_template
+            - MYSQL_USER=u161091_template
+            - MYSQL_PASSWORD=EtpPdihrYMWQLmG1
             - DB_USERNAME=u161091_template
             - DB_PASSWORD=EtpPdihrYMWQLmG1
         # ports:
