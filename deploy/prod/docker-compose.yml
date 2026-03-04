@@ -10,6 +10,7 @@ services:
     working_dir: /var/www
     volumes:
       - ../../storage:/var/www/storage
+      - ../../public:/var/www/public
     depends_on:
       - db
       - redis
@@ -80,6 +81,7 @@ services:
     restart: always
     volumes:
       - ../../storage:/var/www/storage
+      - ../../public:/var/www/public
     depends_on:
       - app
     # ports:
@@ -207,3 +209,4 @@ services:
 volumes:
   mysql_data:
   redis_data:
+  public_assets:
