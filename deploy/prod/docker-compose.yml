@@ -5,7 +5,7 @@ services:
     build:
       context: ../../
       dockerfile: deploy/prod/Dockerfile
-    container_name: wpaicopilot_prod_app
+    container_name: frontis_prod_app
     restart: always
     working_dir: /var/www
     volumes:
@@ -43,7 +43,7 @@ services:
     build:
       context: ../../
       dockerfile: deploy/prod/Dockerfile
-    container_name: wpaicopilot_prod_reverb
+    container_name: frontis_prod_reverb
     restart: always
     working_dir: /var/www
     volumes:
@@ -76,7 +76,7 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    container_name: wpaicopilot_prod_nginx
+    container_name: frontis_prod_nginx
     restart: always
     volumes:
       - ../../storage:/var/www/storage
@@ -93,7 +93,7 @@ services:
 
   db:
     image: mysql:8.4
-    container_name: wpaicopilot_prod_db
+    container_name: frontis_prod_db
     restart: always
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
@@ -115,7 +115,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: wpaicopilot_prod_redis
+    container_name: frontis_prod_redis
     restart: always
     volumes:
       - redis_data:/data
@@ -128,7 +128,7 @@ services:
     build:
       context: ../../
       dockerfile: deploy/prod/Dockerfile
-    container_name: wpaicopilot_prod_queue
+    container_name: frontis_prod_queue
     restart: always
     working_dir: /var/www
     volumes:
@@ -155,7 +155,7 @@ services:
     build:
       context: ../../
       dockerfile: deploy/prod/Dockerfile
-    container_name: wpaicopilot_prod_queue_default
+    container_name: frontis_prod_queue_default
     restart: always
     working_dir: /var/www
     volumes:
@@ -182,7 +182,7 @@ services:
     build:
       context: ../../
       dockerfile: deploy/prod/Dockerfile
-    container_name: wpaicopilot_prod_scheduler
+    container_name: frontis_prod_scheduler
     restart: always
     working_dir: /var/www
     volumes:
