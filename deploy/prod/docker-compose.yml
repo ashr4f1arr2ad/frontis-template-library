@@ -1,0 +1,209 @@
+name: wpaicopilot-prod
+
+services:
+  app:
+    build:
+      context: ../../
+      dockerfile: deploy/prod/Dockerfile
+    container_name: wpaicopilot_prod_app
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ../../storage:/var/www/storage
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - ../../.env
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+    command: php artisan octane:start --server=swoole --workers=4 --max-requests=500 --host=0.0.0.0 --port=8000
+    healthcheck:
+      test: ["CMD", "php", "-r", "file_get_contents('http://localhost:8000/up') !== false || exit(1);"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '4.0'
+        reservations:
+          memory: 1G
+          cpus: '2.0'
+
+  reverb:
+    build:
+      context: ../../
+      dockerfile: deploy/prod/Dockerfile
+    container_name: wpaicopilot_prod_reverb
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ../../storage:/var/www/storage
+    depends_on:
+      - app
+    env_file:
+      - ../../.env
+    environment:
+      REVERB_SERVER_HOST: "0.0.0.0"
+      REVERB_SERVER_PORT: "8080"
+      DB_HOST: db
+      REDIS_HOST: redis
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+    command: php artisan reverb:start
+    # ports:
+    #   - "${REVERB_PORT:-8080}:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '2.0'
+        reservations:
+          memory: 512M
+          cpus: '1.0'
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: wpaicopilot_prod_nginx
+    restart: always
+    volumes:
+      - ../../storage:/var/www/storage
+    depends_on:
+      - app
+    ports:
+      - "${APP_PORT:-80}:80"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  db:
+    image: mysql:8.4
+    container_name: wpaicopilot_prod_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # ports:
+    #   - "${DB_PORT:-3306}:3306"
+    env_file:
+      - ../../.env
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  redis:
+    image: redis:7-alpine
+    container_name: wpaicopilot_prod_redis
+    restart: always
+    volumes:
+      - redis_data:/data
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  queue:
+    build:
+      context: ../../
+      dockerfile: deploy/prod/Dockerfile
+    container_name: wpaicopilot_prod_queue
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ../../storage:/var/www/storage
+    depends_on:
+      - db
+      - redis
+      - reverb
+    env_file:
+      - ../../.env
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+    command: php artisan queue:work --queue=high,medium,low --sleep=3 --tries=3 --max-time=3600
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  queue_default:
+    build:
+      context: ../../
+      dockerfile: deploy/prod/Dockerfile
+    container_name: wpaicopilot_prod_queue_default
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ../../storage:/var/www/storage
+    depends_on:
+      - db
+      - redis
+      - reverb
+    env_file:
+      - ../../.env
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  scheduler:
+    build:
+      context: ../../
+      dockerfile: deploy/prod/Dockerfile
+    container_name: wpaicopilot_prod_scheduler
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ../../storage:/var/www/storage
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - ../../.env
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+    command: php artisan schedule:work
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+volumes:
+  mysql_data:
+  redis_data:
