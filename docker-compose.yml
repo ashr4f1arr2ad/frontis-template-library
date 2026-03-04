@@ -11,8 +11,8 @@ services:
         volumes:
             - .env:/var/www/html/.env
             - ./storage:/var/www/html/storage
-        ports:
-            - "80:80"
+        # ports:
+        #     - "80:80"
         networks:
             - app-network
     db:
@@ -23,8 +23,8 @@ services:
             - MYSQL_DATABASE=s161091_template
             - DB_USERNAME=u161091_template
             - DB_PASSWORD=EtpPdihrYMWQLmG1
-        ports:
-            - "3306:3306"
+        # ports:
+        #     - "3306:3306"
         networks:
             - app-network
     # Optional: Redis service (based on .env requirements)
