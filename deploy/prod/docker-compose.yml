@@ -9,8 +9,8 @@ services:
     restart: always
     working_dir: /var/www
     volumes:
-      - ../../storage:/var/www/storage
-      - ../../public:/var/www/public
+      - ./storage:/var/www/storage
+      - ./public:/var/www/public
     depends_on:
       - db
       - redis
@@ -48,7 +48,7 @@ services:
     restart: always
     working_dir: /var/www
     volumes:
-      - ../../storage:/var/www/storage
+      - ./storage:/var/www/storage
     depends_on:
       - app
     env_file:
@@ -80,8 +80,8 @@ services:
     container_name: frontis_prod_nginx
     restart: always
     volumes:
-      - ../../storage:/var/www/storage
-      - ../../public:/var/www/public
+      - ./storage:/var/www/storage
+      - ./public:/var/www/public
     depends_on:
       - app
     # ports:
@@ -134,7 +134,7 @@ services:
   #   restart: always
   #   working_dir: /var/www
   #   volumes:
-  #     - ../../storage:/var/www/storage
+  #     - ./storage:/var/www/storage
   #   depends_on:
   #     - db
   #     - redis
@@ -161,7 +161,7 @@ services:
   #   restart: always
   #   working_dir: /var/www
   #   volumes:
-  #     - ../../storage:/var/www/storage
+  #     - ./storage:/var/www/storage
   #   depends_on:
   #     - db
   #     - redis
@@ -188,7 +188,7 @@ services:
     restart: always
     working_dir: /var/www
     volumes:
-      - ../../storage:/var/www/storage
+      - ./storage:/var/www/storage
     depends_on:
       - db
       - redis
