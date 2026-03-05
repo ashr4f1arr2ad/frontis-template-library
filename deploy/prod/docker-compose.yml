@@ -153,32 +153,32 @@ services:
         limits:
           memory: 1G
 
-  queue_default:
-    build:
-      context: ../../
-      dockerfile: deploy/prod/Dockerfile
-    container_name: frontis_prod_queue_default
-    restart: always
-    working_dir: /var/www
-    volumes:
-      - ../../storage:/var/www/storage
-    depends_on:
-      - db
-      - redis
-      - reverb
-    env_file:
-      - ../../.env
-    environment:
-      DB_HOST: db
-      REDIS_HOST: redis
-      REVERB_HOST: reverb
-      REVERB_PORT: 8080
-      REVERB_SCHEME: http
-    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
-    deploy:
-      resources:
-        limits:
-          memory: 1G
+  # queue_default:
+  #   build:
+  #     context: ../../
+  #     dockerfile: deploy/prod/Dockerfile
+  #   container_name: frontis_prod_queue_default
+  #   restart: always
+  #   working_dir: /var/www
+  #   volumes:
+  #     - ../../storage:/var/www/storage
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     - reverb
+  #   env_file:
+  #     - ../../.env
+  #   environment:
+  #     DB_HOST: db
+  #     REDIS_HOST: redis
+  #     REVERB_HOST: reverb
+  #     REVERB_PORT: 8080
+  #     REVERB_SCHEME: http
+  #   command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 1G
 
   scheduler:
     build:
@@ -209,4 +209,3 @@ services:
 volumes:
   mysql_data:
   redis_data:
-  public_assets:

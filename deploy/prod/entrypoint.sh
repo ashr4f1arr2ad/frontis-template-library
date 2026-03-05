@@ -26,7 +26,7 @@ echo "Database connected!"
 
 # Migrate
 echo "Running migrations..."
-php artisan migrate --force
+# php artisan migrate --force
 
 # Optimize Laravel for production
 echo "Optimizing Laravel..."
