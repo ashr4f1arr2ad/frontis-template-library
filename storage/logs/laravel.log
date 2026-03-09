@@ -703,3 +703,59 @@
 #42 /var/www/template-library.frontiswp.com/public/index.php(20): Illuminate\\Foundation\\Application->handleRequest()
 #43 {main}
 "} 
+[2026-03-09 05:53:28] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 05:53:47] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 05:53:57] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 05:54:03] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 05:59:21] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 05:59:32] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 06:00:25] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 06:02:46] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 06:02:53] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 06:03:00] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 06:04:30] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3888464 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 06:14:32] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3768392 bytes) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3768392 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 06:14:35] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3768392 bytes) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3768392 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 
+[2026-03-09 06:14:40] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 3768392 bytes) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 134217728 bytes exhausted (tried to allocate 3768392 bytes) at /Applications/AMPPS/www/frontis-portal/vendor/laravel/framework/src/Illuminate/Database/Connection.php:427)
+[stacktrace]
+#0 {main}
+"} 

@@ -151,27 +151,44 @@ class SiteController extends Controller
         }
 
         // Fetch patterns with their associated categories
-        $sites = $query->paginate($perPage, ['*'], 'page', $page)
-            ->through(function ($site) use ($savedItems) {
-                $colors = $site->colors;
-                if (is_string($colors)) {
-                    $colors = json_decode($colors, true);
-                }
+        $sites = $query->select([
+            'id',
+            'title',
+            'slug',
+            'content',
+            'tags',
+            'description',
+            'image',
+            'preview_url',
+            'read_more_url',
+            'dependencies',
+            // 'colors',
+            // 'color_gradients',
+            // 'typographies',
+            // 'custom_typographies',
+            'is_premium',
+        ])
+        ->paginate($perPage, ['*'], 'page', $page)
+        ->through(function ($site) use ($savedItems) {
+                // $colors = $site->colors;
+                // if (is_string($colors)) {
+                //     $colors = json_decode($colors, true);
+                // }
 
-                $color_gradients = $site->color_gradients;
-                if (is_string($color_gradients)) {
-                    $color_gradients = json_decode($color_gradients, true);
-                }
+                // $color_gradients = $site->color_gradients;
+                // if (is_string($color_gradients)) {
+                //     $color_gradients = json_decode($color_gradients, true);
+                // }
                 
-                $typographies = $site->typographies;
-                if (is_string($typographies)) {
-                    $typographies = json_decode($typographies, true);
-                }
+                // $typographies = $site->typographies;
+                // if (is_string($typographies)) {
+                //     $typographies = json_decode($typographies, true);
+                // }
 
-                $custom_typographies = $site->custom_typographies;
-                if (is_string($custom_typographies)) {
-                    $custom_typographies = json_decode($custom_typographies, true);
-                }
+                // $custom_typographies = $site->custom_typographies;
+                // if (is_string($custom_typographies)) {
+                //     $custom_typographies = json_decode($custom_typographies, true);
+                // }
 
                 return [
                     'id' => $site->id,
@@ -184,10 +201,10 @@ class SiteController extends Controller
                     'preview_url' => $site->preview_url,
                     'read_more_url' => $site->read_more_url,
                     'dependencies' => $site->dependencies,
-                    'colors' => $colors,
-                    'color_gradients' => $color_gradients,
-                    'typographies' => $typographies,
-                    'custom_typographies' => $custom_typographies,
+                    // 'colors' => $colors,
+                    // 'color_gradients' => $color_gradients,
+                    // 'typographies' => $typographies,
+                    // 'custom_typographies' => $custom_typographies,
                     'is_premium' => $site->is_premium,
                     'categories' => $site->categories->pluck('name')->toArray(),
                     'saved' => in_array((int)$site->id, $savedItems),
