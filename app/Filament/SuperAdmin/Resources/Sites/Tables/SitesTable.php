@@ -42,8 +42,8 @@ class SitesTable
                 EditAction::make()->closeModalByClickingAway(false),
                 DeleteAction::make()
             ])
-            ->defaultPaginationPageOption(5)
-    ->paginated([5, 10, 15])
+            ->defaultPaginationPageOption(1)
+            ->paginated([5])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
