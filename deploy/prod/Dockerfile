@@ -34,6 +34,9 @@ RUN pecl install swoole && docker-php-ext-enable swoole
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# ADD THIS LINE:
+COPY deploy/prod/php-prod.ini /usr/local/etc/php/conf.d/app-php.ini
+
 # Set working directory
 WORKDIR /var/www
 
