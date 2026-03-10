@@ -254,8 +254,7 @@ class ResourcesController extends Controller
             'colors' => 'nullable|string',
             'color_gradients' => 'nullable|string',
             'typographies' => 'nullable|string',
-            'custom_typographies' => 'nullable|string',
-            'pages' => 'nullable|array'
+            'custom_typographies' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -334,31 +333,56 @@ class ResourcesController extends Controller
 
         $site->categories()->sync($request->categories);
 
-        // Site pages update or create
-        $pages = $request->input('pages', []);
-        $sitePage = null;
+        return response()->json([
+            'message' => $message,
+            'site_id' => $site->id
+        ], 200);
+    }
 
-        if (!empty($site->id)) {
-            $sitePage = SitePage::where('site_id', $site->id)->first();
-        } else {
-            $sitePage = SitePage::where('site_slug', $site->slug)->first();
+    public function store_site_pages(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'slug' => 'required|string',
+            'pages' => 'nullable|array'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
+
+        $data = $validator->validated();
+
+        $site = Site::where('slug', $data['slug'])->first();
+
+        if (!$site) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Site not found with slug: ' . $data['slug'],
+            ], 404);
+        }
+
+        $pages = $data['pages'] ?? [];
+
+        $sitePage = SitePage::where('site_id', $site->id)->first();
 
         if ($sitePage) {
             $sitePage->update([
-                'site_slug' => $site->slug,
-                'pages' => $pages ?? $sitePage->pages, // replace pages column
+                'pages' => $pages,
             ]);
         } else {
             SitePage::create([
                 'site_id' => $site->id,
                 'site_slug' => $site->slug,
-                'pages' => $pages ?? [],
+                'pages' => $pages,
             ]);
         }
 
         return response()->json([
-            'message' => $message,
+            'message' => 'Site pages updated successfully.',
             'site_id' => $site->id
         ], 200);
     }

@@ -43,6 +43,7 @@ Route::middleware('secret.key')->group(function () {
     // Webhooks
     Route::post('/resources', [ResourcesController::class, 'resources']);
     Route::post('/resources/store', [ResourcesController::class, 'store']);
+    Route::post('/resources/store/site-pages', [ResourcesController::class, 'store_site_pages']);
 
     // Categories
     Route::get('/categories', [CategoriesController::class, 'get_categories']);
