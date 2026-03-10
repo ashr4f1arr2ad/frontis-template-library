@@ -240,22 +240,22 @@ class ResourcesController extends Controller
             'content' => 'nullable|string',
             'tags' => 'required|array',
             'categories' => 'required|array',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'image' => 'required|string',
             'preview_url' => 'required|string',
             'read_more_url' => 'nullable|string',
             'uploads_url' => 'nullable|string',
             'is_premium' => 'nullable|string',
-            'dependencies' => 'required|array',
+            'dependencies' => 'nullable|array',
             'headers' => 'nullable|string',
             'footers' => 'nullable|string',
             'templates' => 'nullable|string',
             'posts' => 'nullable|string',
-            'colors' => 'required|string',
+            'colors' => 'nullable|string',
             'color_gradients' => 'nullable|string',
-            'typographies' => 'required|string',
-            'custom_typographies' => 'required|string',
-            'pages' => 'required|array'
+            'typographies' => 'nullable|string',
+            'custom_typographies' => 'nullable|string',
+            'pages' => 'nullable|array'
         ]);
 
         if ($validator->fails()) {

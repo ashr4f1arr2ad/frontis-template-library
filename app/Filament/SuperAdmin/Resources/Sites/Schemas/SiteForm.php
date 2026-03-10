@@ -54,7 +54,7 @@ class SiteForm
                             ->required()
                             ->unique(table: Category::class),
                     ])->required()->columns(3)->columnSpanFull(),
-                MarkdownEditor::make('description')->required()->columnSpanFull(),
+                MarkdownEditor::make('description')->columnSpanFull(),
                 FileUpload::make('image')
                     ->required()
                     ->disk('public')
@@ -73,11 +73,9 @@ class SiteForm
                     ->label('Uploads Url')->columnSpanFull(),
                 Repeater::make('dependencies')
                         ->schema([
-                            TextInput::make('name')
-                            ->required(),
-                            TextInput::make('slug')
-                            ->required(),
-                            TextInput::make('version')->required()
+                            TextInput::make('name'),
+                            TextInput::make('slug'),
+                            TextInput::make('version')
                         ])->columns(3)->columnSpanFull(),
                 Section::make()
                         ->schema([
@@ -106,7 +104,6 @@ class SiteForm
                 Section::make()
                         ->schema([
                             Textarea::make('colors')
-                            ->required()
                             ->rows(8)
                             ->label('Color JSON')->columnSpanFull(),
                     ])->columns(1)->columnSpanFull(),
@@ -119,7 +116,6 @@ class SiteForm
                 Section::make()
                     ->schema([
                         Textarea::make('typographies')
-                        ->required()
                         ->rows(8)
                         ->label('Typographies JSON')->columnSpanFull(),
                     ])->columns(1)->columnSpanFull(),
