@@ -338,8 +338,8 @@ class ResourcesController extends Controller
         $pages = $request->input('pages', []);
         $sitePage = null;
 
-        if (!empty($page['id'])) {
-            $sitePage = SitePage::where('id', $page['id'])->where('site_id', $site->id)->first();
+        if (!empty($site->id)) {
+            $sitePage = SitePage::where('site_id', $site->id)->where('site_id', $site->id)->first();
         }
 
         if (!$sitePage) {
