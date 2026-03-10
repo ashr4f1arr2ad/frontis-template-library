@@ -129,18 +129,6 @@ class SiteForm
                         ->rows(8)
                         ->label('Custom Typographies JSON')->columnSpanFull(),
                     ])->columns(1)->columnSpanFull(),
-                Repeater::make('pages')
-                        ->schema([
-                            TextInput::make('name')
-                            ->required(),
-                            TextInput::make('template'),
-                            TextInput::make('badge'),
-                            Textarea::make('page')
-                            ->required()
-                            ->rows(8)
-                            ->label('Page JSON')->columnSpanFull(),
-                            TextInput::make('featured_image')->url()
-                    ])->columns(1)->columnSpanFull(),
                 Toggle::make('is_premium')
                     ->label('Premium'),
             ]);

@@ -9,6 +9,7 @@ use App\Models\Cloud;
 use App\Models\License;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Site;
+use App\Models\SitePage;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller

@@ -27,8 +27,7 @@ class Site extends Model
         'colors', 
         'color_gradients', 
         'typographies', 
-        'custom_typographies', 
-        'pages'
+        'custom_typographies'
     ];
 
     protected $casts = [
@@ -41,8 +40,7 @@ class Site extends Model
         'colors' => 'array',
         'color_gradients' => 'array',
         'typographies' => 'array',
-        'custom_typographies' => 'array',
-        'pages' => 'array',
+        'custom_typographies' => 'array'
     ];
 
     public function categories()
