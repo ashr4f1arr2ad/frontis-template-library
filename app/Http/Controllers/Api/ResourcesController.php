@@ -339,11 +339,9 @@ class ResourcesController extends Controller
         $sitePage = null;
 
         if (!empty($site->id)) {
-            $sitePage = SitePage::where('site_id', $site->id)->where('site_id', $site->id)->first();
-        }
-
-        if (!$sitePage) {
-            $sitePage = SitePage::where('site_id', $site->id)->where('site_slug', $site->slug)->first();
+            $sitePage = SitePage::where('site_id', $site->id)->first();
+        } else {
+            $sitePage = SitePage::where('site_slug', $site->slug)->first();
         }
 
         if ($sitePage) {
