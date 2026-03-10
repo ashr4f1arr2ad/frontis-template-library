@@ -11,6 +11,7 @@ use App\Models\License;
 use App\Models\Pattern;
 use App\Models\Page;
 use App\Models\Site;
+use App\Models\SitePage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -332,6 +333,31 @@ class ResourcesController extends Controller
         }
 
         $site->categories()->sync($request->categories);
+
+        // Site pages update or create
+        $pages = $request->input('pages', []);
+        $sitePage = null;
+
+        if (!empty($page['id'])) {
+            $sitePage = SitePage::where('id', $page['id'])->where('site_id', $site->id)->first();
+        }
+
+        if (!$sitePage) {
+            $sitePage = SitePage::where('site_id', $site->id)->where('site_slug', $site->slug)->first();
+        }
+
+        if ($sitePage) {
+            $sitePage->update([
+                'site_slug' => $site->slug,
+                'pages' => $pages ?? $sitePage->pages, // replace pages column
+            ]);
+        } else {
+            SitePage::create([
+                'site_id' => $site->id,
+                'site_slug' => $site->slug,
+                'pages' => $pages ?? [],
+            ]);
+        }
 
         return response()->json([
             'message' => $message,

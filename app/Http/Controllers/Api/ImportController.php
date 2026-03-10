@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Models\Pattern;
 use App\Models\Site;
+use App\Models\SitePage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -67,7 +68,8 @@ class ImportController extends Controller
 
         // Get pages JSON by site ID
         // $site_json = Site::query()->where('id', $validated['site_id'])->value('pages');
-        $site_json = Site::query()->select(['pages', 'uploads_url', 'templates', 'posts', 'headers', 'footers'])->where('id', $validated['site_id'])->first();
+        $site_json = Site::query()->select(['uploads_url', 'templates', 'posts', 'headers', 'footers'])->where('id', $validated['site_id'])->first();
+        $pages_json = SitePage::query()->select(['pages'])->where('site_id', $validated['site_id'])->first();
 
         // Check if site_json is null (record not found)
         if (is_null($site_json)) {
@@ -78,7 +80,7 @@ class ImportController extends Controller
         }
 
         $pages = [];
-        foreach($site_json["pages"] as $page) {
+        foreach($pages_json["pages"] as $page) {
             $page_content = json_decode($page["page"]);
             $pages[] = [
                 "title" => $page["name"],
