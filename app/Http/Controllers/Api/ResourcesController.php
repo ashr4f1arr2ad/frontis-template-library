@@ -335,27 +335,27 @@ class ResourcesController extends Controller
         $site->categories()->sync($request->categories);
 
         // Site pages update or create
-        $pages = $request->input('pages', []);
-        $sitePage = null;
+        // $pages = $request->input('pages', []);
+        // $sitePage = null;
 
-        if (!empty($site->id)) {
-            $sitePage = SitePage::where('site_id', $site->id)->first();
-        } else {
-            $sitePage = SitePage::where('site_slug', $site->slug)->first();
-        }
+        // if (!empty($site->id)) {
+        //     $sitePage = SitePage::where('site_id', $site->id)->first();
+        // } else {
+        //     $sitePage = SitePage::where('site_slug', $site->slug)->first();
+        // }
 
-        if ($sitePage) {
-            $sitePage->update([
-                'site_slug' => $site->slug,
-                'pages' => $pages ?? $sitePage->pages, // replace pages column
-            ]);
-        } else {
-            SitePage::create([
-                'site_id' => $site->id,
-                'site_slug' => $site->slug,
-                'pages' => $pages ?? [],
-            ]);
-        }
+        // if ($sitePage) {
+        //     $sitePage->update([
+        //         'site_slug' => $site->slug,
+        //         'pages' => $pages ?? $sitePage->pages, // replace pages column
+        //     ]);
+        // } else {
+        //     SitePage::create([
+        //         'site_id' => $site->id,
+        //         'site_slug' => $site->slug,
+        //         'pages' => $pages ?? [],
+        //     ]);
+        // }
 
         return response()->json([
             'message' => $message,
