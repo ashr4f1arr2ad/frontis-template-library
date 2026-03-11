@@ -365,7 +365,7 @@ class ResourcesController extends Controller
             ], 404);
         }
 
-        $pages = $data['pages'] ?? [];
+        $pages = $data['pages'] ?? null;
 
         $sitePage = SitePage::where('site_id', $site->id)->first();
 
