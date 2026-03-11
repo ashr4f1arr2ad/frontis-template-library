@@ -384,7 +384,7 @@ class ResourcesController extends Controller
         return response()->json([
             'message' => 'Site pages updated successfully.',
             'site_id' => $site->id,
-            'data' => $data
+            'data' => $data['pages'] ?? []
         ], 200);
     }
 }
