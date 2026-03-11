@@ -356,34 +356,35 @@ class ResourcesController extends Controller
 
         $data = $validator->validated();
 
-        $site = Site::where('slug', $data['slug'])->first();
+        // $site = Site::where('slug', $data['slug'])->first();
 
-        if (!$site) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Site not found with slug: ' . $data['slug'],
-            ], 404);
-        }
+        // if (!$site) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Site not found with slug: ' . $data['slug'],
+        //     ], 404);
+        // }
 
-        $pages = $data['pages'] ?? [];
+        // $pages = $data['pages'] ?? [];
 
-        $sitePage = SitePage::where('site_id', $site->id)->first();
+        // $sitePage = SitePage::where('site_id', $site->id)->first();
 
-        if ($sitePage) {
-            $sitePage->update([
-                'pages' => $pages,
-            ]);
-        } else {
-            SitePage::create([
-                'site_id' => $site->id,
-                'site_slug' => $site->slug,
-                'pages' => $pages,
-            ]);
-        }
+        // if ($sitePage) {
+        //     $sitePage->update([
+        //         'pages' => $pages,
+        //     ]);
+        // } else {
+        //     SitePage::create([
+        //         'site_id' => $site->id,
+        //         'site_slug' => $site->slug,
+        //         'pages' => $pages,
+        //     ]);
+        // }
 
         return response()->json([
             'message' => 'Site pages updated successfully.',
-            'site_id' => $site->id
+            'site_id' => $site->id,
+            'data' => $data
         ], 200);
     }
 }
