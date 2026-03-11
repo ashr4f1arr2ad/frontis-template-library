@@ -356,9 +356,6 @@ class ResourcesController extends Controller
 
         $data = $validator->validated();
 
-        var_dump($data['pages']);
-        die();
-
         $site = Site::where('slug', $data['slug'])->first();
 
         if (!$site) {
