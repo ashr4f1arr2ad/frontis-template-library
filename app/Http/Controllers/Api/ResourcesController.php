@@ -371,13 +371,13 @@ class ResourcesController extends Controller
 
         if ($sitePage) {
             $sitePage->update([
-                'pages' => json_decode($pages),
+                'pages' => $pages,
             ]);
         } else {
             SitePage::create([
                 'site_id' => $site->id,
                 'site_slug' => $site->slug,
-                'pages' => json_decode($pages),
+                'pages' => $pages,
             ]);
         }
 
