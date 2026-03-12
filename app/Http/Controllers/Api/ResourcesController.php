@@ -343,7 +343,7 @@ class ResourcesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'slug' => 'required|string',
-            'pages' => 'nullable|array'
+            'pages' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -365,7 +365,7 @@ class ResourcesController extends Controller
             ], 404);
         }
 
-        $pages = $data['pages'] ?? [];
+        $pages = $data['pages'] ?? null;
 
         $sitePage = SitePage::where('site_id', $site->id)->first();
 
@@ -373,7 +373,7 @@ class ResourcesController extends Controller
             $sitePage->update([
                 'pages' => $pages,
             ]);
-
+            
             $message = 'Site pages updated successfully.';
         } else {
             SitePage::create([
@@ -381,7 +381,7 @@ class ResourcesController extends Controller
                 'site_slug' => $site->slug,
                 'pages' => $pages,
             ]);
-
+            
             $message = 'Site created successfully.';
         }
 
