@@ -373,16 +373,20 @@ class ResourcesController extends Controller
             $sitePage->update([
                 'pages' => $pages,
             ]);
+            
+            $message = 'Site pages updated successfully.';
         } else {
             SitePage::create([
                 'site_id' => $site->id,
                 'site_slug' => $site->slug,
                 'pages' => $pages,
             ]);
+
+            $message = 'Site created successfully.';
         }
 
         return response()->json([
-            'message' => 'Site pages updated successfully.',
+            'message' => $message,
             'site_id' => $site->id
         ], 200);
     }
