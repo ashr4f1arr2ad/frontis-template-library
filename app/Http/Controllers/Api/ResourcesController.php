@@ -341,6 +341,7 @@ class ResourcesController extends Controller
 
     public function store_site_pages(Request $request): JsonResponse
     {
+
         $validator = Validator::make($request->all(), [
             'slug' => 'required|string',
             'pages' => 'nullable|string'
@@ -373,7 +374,7 @@ class ResourcesController extends Controller
             $sitePage->update([
                 'pages' => $pages,
             ]);
-            
+
             $message = 'Site pages updated successfully.';
         } else {
             SitePage::create([
