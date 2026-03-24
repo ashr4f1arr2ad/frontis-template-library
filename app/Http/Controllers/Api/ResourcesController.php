@@ -341,10 +341,9 @@ class ResourcesController extends Controller
 
     public function store_site_pages(Request $request): JsonResponse
     {
-
         $validator = Validator::make($request->all(), [
             'slug' => 'required|string',
-            'pages' => 'nullable|string'
+            'pages' => 'nullable|array'
         ]);
 
         if ($validator->fails()) {
@@ -366,7 +365,7 @@ class ResourcesController extends Controller
             ], 404);
         }
 
-        $pages = $data['pages'] ?? null;
+        $pages = $data['pages'] ?? [];
 
         $sitePage = SitePage::where('site_id', $site->id)->first();
 
@@ -383,7 +382,7 @@ class ResourcesController extends Controller
                 'pages' => $pages,
             ]);
             
-            $message = 'Site created successfully.';
+            $message = 'Site pages created successfully.';
         }
 
         return response()->json([
