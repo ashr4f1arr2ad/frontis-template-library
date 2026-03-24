@@ -43,19 +43,19 @@ class ResourcesController extends Controller
 
         if ($type === 'patterns') {
             $category = Category::where('slug', $categorySlug)->first();
-        
+
             if (!$category) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Category not found for slug: ' . $categorySlug,
                 ], 404);
             }
-        
+
             $patternIds = DB::table('category_pattern')
                 ->where('category_id', $category->id)
                 ->pluck('pattern_id')
                 ->toArray();
-        
+
             if (count($patternIds) === 0) {
                 return response()->json([
                     'status' => 'success',
@@ -63,7 +63,7 @@ class ResourcesController extends Controller
                     'items' => [],
                     'pagination' => [
                         'current_page' => 1,
-                        'per_page' => (int) $request->input('per_page', 12),
+                        'per_page' => (int)$request->input('per_page', 12),
                         'total' => 0,
                         'last_page' => 0,
                         'from' => null,
@@ -71,25 +71,25 @@ class ResourcesController extends Controller
                     ],
                 ]);
             }
-        
-            $page = (int) $request->input('page', 1);
-            $perPage = (int) $request->input('per_page', 12);
-        
+
+            $page = (int)$request->input('page', 1);
+            $perPage = (int)$request->input('per_page', 12);
+
             $query = Pattern::select('id', 'title', 'slug', 'image', 'preview_url', 'read_more_url', 'is_premium')->whereIn('id', $patternIds);
-        
+
             $patterns = $query->paginate($perPage, ['*'], 'page', $page)
                 ->through(function ($pattern) {
-                    return [
-                        'id' => $pattern->id,
-                        'title' => $pattern->title,
-                        'slug' => $pattern->slug,
-                        'image' => $pattern->image,
-                        'preview_url' => $pattern->preview_url,
-                        'read_more_url' => $pattern->read_more_url,
-                        'is_premium' => $pattern->is_premium,
-                    ];
-                });
-        
+                return [
+                'id' => $pattern->id,
+                'title' => $pattern->title,
+                'slug' => $pattern->slug,
+                'image' => $pattern->image,
+                'preview_url' => $pattern->preview_url,
+                'read_more_url' => $pattern->read_more_url,
+                'is_premium' => $pattern->is_premium,
+                ];
+            });
+
             return response()->json([
                 'status' => 'success',
                 'items' => $patterns->items(),
@@ -106,19 +106,19 @@ class ResourcesController extends Controller
 
         if ($type === 'pages') {
             $category = Category::where('slug', $categorySlug)->first();
-        
+
             if (!$category) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Category not found for slug: ' . $categorySlug,
                 ], 404);
             }
-        
+
             $pagesIds = DB::table('category_page')
                 ->where('category_id', $category->id)
                 ->pluck('page_id')
                 ->toArray();
-        
+
             if (count($siteIds) === 0) {
                 return response()->json([
                     'status' => 'success',
@@ -126,7 +126,7 @@ class ResourcesController extends Controller
                     'items' => [],
                     'pagination' => [
                         'current_page' => 1,
-                        'per_page' => (int) $request->input('per_page', 12),
+                        'per_page' => (int)$request->input('per_page', 12),
                         'total' => 0,
                         'last_page' => 0,
                         'from' => null,
@@ -134,25 +134,25 @@ class ResourcesController extends Controller
                     ],
                 ]);
             }
-        
-            $page = (int) $request->input('page', 1);
-            $perPage = (int) $request->input('per_page', 12);
-        
+
+            $page = (int)$request->input('page', 1);
+            $perPage = (int)$request->input('per_page', 12);
+
             $query = Page::select('id', 'title', 'slug', 'image', 'preview_url', 'read_more_url', 'is_premium')->whereIn('id', $pagesIds);
-        
+
             $pages = $query->paginate($perPage, ['*'], 'page', $page)
                 ->through(function ($site) {
-                    return [
-                        'id' => $page->id,
-                        'title' => $page->title,
-                        'slug' => $page->slug,
-                        'image' => $page->image,
-                        'preview_url' => $page->preview_url,
-                        'read_more_url' => $page->read_more_url,
-                        'is_premium' => $page->is_premium,
-                    ];
-                });
-        
+                return [
+                'id' => $page->id,
+                'title' => $page->title,
+                'slug' => $page->slug,
+                'image' => $page->image,
+                'preview_url' => $page->preview_url,
+                'read_more_url' => $page->read_more_url,
+                'is_premium' => $page->is_premium,
+                ];
+            });
+
             return response()->json([
                 'status' => 'success',
                 'items' => $pages->items(),
@@ -169,19 +169,19 @@ class ResourcesController extends Controller
 
         if ($type === 'sites') {
             $category = Category::where('slug', $categorySlug)->first();
-        
+
             if (!$category) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Category not found for slug: ' . $categorySlug,
                 ], 404);
             }
-        
+
             $siteIds = DB::table('category_site')
                 ->where('category_id', $category->id)
                 ->pluck('site_id')
                 ->toArray();
-        
+
             if (count($siteIds) === 0) {
                 return response()->json([
                     'status' => 'success',
@@ -189,7 +189,7 @@ class ResourcesController extends Controller
                     'items' => [],
                     'pagination' => [
                         'current_page' => 1,
-                        'per_page' => (int) $request->input('per_page', 12),
+                        'per_page' => (int)$request->input('per_page', 12),
                         'total' => 0,
                         'last_page' => 0,
                         'from' => null,
@@ -197,25 +197,25 @@ class ResourcesController extends Controller
                     ],
                 ]);
             }
-        
-            $page = (int) $request->input('page', 1);
-            $perPage = (int) $request->input('per_page', 12);
-        
+
+            $page = (int)$request->input('page', 1);
+            $perPage = (int)$request->input('per_page', 12);
+
             $query = Site::select('id', 'title', 'slug', 'image', 'preview_url', 'read_more_url', 'is_premium')->whereIn('id', $siteIds);
-        
+
             $sites = $query->paginate($perPage, ['*'], 'page', $page)
                 ->through(function ($site) {
-                    return [
-                        'id' => $site->id,
-                        'title' => $site->title,
-                        'slug' => $site->slug,
-                        'image' => $site->image,
-                        'preview_url' => $site->preview_url,
-                        'read_more_url' => $site->read_more_url,
-                        'is_premium' => $site->is_premium,
-                    ];
-                });
-        
+                return [
+                'id' => $site->id,
+                'title' => $site->title,
+                'slug' => $site->slug,
+                'image' => $site->image,
+                'preview_url' => $site->preview_url,
+                'read_more_url' => $site->read_more_url,
+                'is_premium' => $site->is_premium,
+                ];
+            });
+
             return response()->json([
                 'status' => 'success',
                 'items' => $sites->items(),
@@ -270,24 +270,26 @@ class ResourcesController extends Controller
         // Image Handling
         if (Str::contains($request->input('image'), ['sites/'])) {
             $data['image'] = $request->input('image');
-        } else {
+        }
+        else {
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('uploads/sites', 'public');
                 $data['image'] = asset('storage/' . $path);
-            } else {
+            }
+            else {
                 $imageUrl = $request->input('image');
                 $imageContents = file_get_contents($imageUrl);
-    
+
                 if ($imageContents === false) {
                     throw new \Exception("Unable to download image.");
                 }
-    
+
                 $originalName = basename(parse_url($imageUrl, PHP_URL_PATH));
-    
+
                 if (!Str::contains($originalName, '.')) {
                     $originalName .= '.jpg';
                 }
-    
+
                 $fileName = 'sites/' . time() . '_' . $originalName;
                 Storage::disk('public')->put($fileName, $imageContents);
                 $data['image'] = $fileName;
@@ -299,33 +301,37 @@ class ResourcesController extends Controller
 
             // Try to find by ID first
             $site = Site::find($data['site_id']);
-        
+
             if ($site) {
                 // Update by ID
                 $site->update($data);
                 $message = 'Site updated successfully (by ID).';
-            } else {
+            }
+            else {
                 // ID not found → fallback to slug
                 $site = Site::where('slug', $data['slug'])->first();
-        
+
                 if ($site) {
                     $site->update($data);
                     $message = 'Site updated successfully (matched by slug).';
-                } else {
+                }
+                else {
                     // Create new
                     $site = Site::create($data);
                     $message = 'Site created successfully.';
                 }
             }
-        
-        } else {
+
+        }
+        else {
             // No ID → check by slug
             $site = Site::where('slug', $data['slug'])->first();
-        
+
             if ($site) {
                 $site->update($data);
                 $message = 'Site updated successfully (matched by slug).';
-            } else {
+            }
+            else {
                 $site = Site::create($data);
                 $message = 'Site created successfully.';
             }
@@ -343,7 +349,7 @@ class ResourcesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'slug' => 'required|string',
-            'pages' => 'nullable|array'
+            'pages' => 'nullable'
         ]);
 
         if ($validator->fails()) {
@@ -354,40 +360,68 @@ class ResourcesController extends Controller
             ], 422);
         }
 
-        $data = $validator->validated();
+        $slug = $request->input('slug');
+        $newPages = $request->input('pages', []);
 
-        $site = Site::where('slug', $data['slug'])->first();
+        // Normalize to array
+        if (is_string($newPages)) {
+            $newPages = json_decode($newPages, true) ?? [];
+        }
+
+        if (!is_array($newPages)) {
+            $newPages = [];
+        }
+
+        $site = Site::where('slug', $slug)->first();
 
         if (!$site) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Site not found with slug: ' . $data['slug'],
+                'message' => 'Site not found with slug: ' . $slug,
             ], 404);
         }
 
-        $pages = $data['pages'] ?? [];
-
+        // Fresh query — avoid any cached/stale model state
         $sitePage = SitePage::where('site_id', $site->id)->first();
 
         if ($sitePage) {
-            $sitePage->update([
-                'pages' => $pages,
-            ]);
+            // Read raw from DB to avoid any cast/cache issues
+            $raw = DB::table('site_pages')
+                ->where('id', $sitePage->id)
+                ->value('pages');
 
-            $message = 'Site pages updated successfully.';
-        } else {
+            $existingPages = [];
+
+            if (!empty($raw)) {
+                $decoded = json_decode($raw, true);
+                if (is_array($decoded)) {
+                    $existingPages = $decoded;
+                }
+            }
+
+            $mergedPages = array_merge($existingPages, $newPages);
+
+            // Write raw JSON to avoid double-encoding
+            DB::table('site_pages')
+                ->where('id', $sitePage->id)
+                ->update(['pages' => json_encode($mergedPages)]);
+
+            $message = 'Site pages updated. Total pages: ' . count($mergedPages);
+
+        }
+        else {
             SitePage::create([
                 'site_id' => $site->id,
                 'site_slug' => $site->slug,
-                'pages' => $pages,
+                'pages' => $newPages, // model cast handles encoding
             ]);
-            
-            $message = 'Site pages created successfully.';
+
+            $message = 'Site pages created. Total pages: ' . count($newPages);
         }
 
         return response()->json([
             'message' => $message,
-            'site_id' => $site->id
+            'site_id' => $site->id,
         ], 200);
     }
 }
