@@ -39,7 +39,7 @@ class SitePageForm
                             ->rows(8)
                             ->label('Page JSON')->columnSpanFull(),
                             TextInput::make('featured_image')->url()
-                    ])->columns(1)->columnSpanFull()->collapsed()
+                    ])->columns(1)->columnSpanFull()->collapsed()->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
             ]);
     }
 }
